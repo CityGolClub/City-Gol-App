@@ -1,0 +1,45 @@
+{
+  "field": {
+    "id": "field_1",
+    "name": "Cancha 1",
+    "fieldType": "futbol5"
+  },
+  "visibleBookings": [
+    {
+      "id": "booking_prev_1",
+      "startsAt": "2026-06-07T17:00:00.000Z",
+      "endsAt": "2026-06-07T18:00:00.000Z",
+      "validFrom": "2026-06-07T16:30:00.000Z",
+      "validUntil": "2026-06-07T18:30:00.000Z",
+      "qrToken": "prev123",
+      "checkinsUsed": 10,
+      "checkinLimit": 10,
+      "isFull": true,
+      "displayKind": "previous"
+    },
+    {
+      "id": "booking_current_1",
+      "startsAt": "2026-06-07T18:00:00.000Z",
+      "endsAt": "2026-06-07T19:00:00.000Z",
+      "validFrom": "2026-06-07T17:30:00.000Z",
+      "validUntil": "2026-06-07T19:30:00.000Z",
+      "qrToken": "cur123",
+      "checkinsUsed": 7,
+      "checkinLimit": 10,
+      "isFull": false,
+      "displayKind": "current"
+    },
+    {
+      "id": "booking_next_1",
+      "startsAt": "2026-06-07T19:00:00.000Z",
+      "endsAt": "2026-06-07T20:00:00.000Z",
+      "validFrom": "2026-06-07T18:30:00.000Z",
+      "validUntil": "2026-06-07T20:30:00.000Z",
+      "qrToken": "next123",
+      "checkinsUsed": 0,
+      "checkinLimit": 10,
+      "isFull": false,
+      "displayKind": "next"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "id": "user_1",
+      "firstName": "Juan",
+      "lastName": "Perez",
+      "email": "juan@example.com",
+      "phone": "+5491123456789",
+      "teamName": "Los Pibes",
+      "scores": {
+        "total": 22,
+        "monthly": 6,
+        "vigente": 14
+      }
+    }
+  ],
+  "total": 1
+}

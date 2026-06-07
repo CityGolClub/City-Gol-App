@@ -1,0 +1,19 @@
+{
+  "id": "user_1",
+  "firstName": "Juan",
+  "lastName": "Perez",
+  "email": "juan@example.com",
+  "phone": "+5491123456789",
+  "birthDate": "1995-04-20",
+  "role": "user",
+  "team": {
+    "id": "team_1",
+    "name": "Los Pibes",
+    "isOwner": true
+  },
+  "scores": {
+    "total": 22,
+    "monthly": 6,
+    "vigente": 14
+  }
+}

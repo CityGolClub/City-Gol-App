@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "id": "booking_current_1",
+      "fieldName": "Cancha 1",
+      "teamName": "Los Pibes",
+      "startsAt": "2026-06-07T18:00:00.000Z",
+      "endsAt": "2026-06-07T19:00:00.000Z",
+      "status": "scheduled",
+      "checkinsUsed": 7,
+      "checkinLimit": 10
+    }
+  ],
+  "total": 1
+}

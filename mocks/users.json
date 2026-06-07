@@ -1,0 +1,38 @@
+[
+  {
+    "id": "user_1",
+    "firstName": "Juan",
+    "lastName": "Perez",
+    "email": "juan@example.com",
+    "phone": "+5491123456789",
+    "birthDate": "1995-04-20",
+    "role": "user",
+    "isActive": true,
+    "team": {
+      "id": "team_1",
+      "name": "Los Pibes",
+      "isOwner": true
+    },
+    "scores": {
+      "total": 22,
+      "monthly": 6,
+      "vigente": 14
+    }
+  },
+  {
+    "id": "admin_1",
+    "firstName": "Alex",
+    "lastName": "Admin",
+    "email": "admin@citygol.app",
+    "phone": "+5491199999999",
+    "birthDate": "1990-08-15",
+    "role": "admin",
+    "isActive": true,
+    "team": null,
+    "scores": {
+      "total": 0,
+      "monthly": 0,
+      "vigente": 0
+    }
+  }
+]

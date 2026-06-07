@@ -1,0 +1,21 @@
+{
+  "field": {
+    "id": "field_2",
+    "name": "Cancha 2",
+    "fieldType": "futbol8"
+  },
+  "visibleBookings": [
+    {
+      "id": "booking_current_2",
+      "startsAt": "2026-06-07T20:00:00.000Z",
+      "endsAt": "2026-06-07T21:00:00.000Z",
+      "validFrom": "2026-06-07T19:45:00.000Z",
+      "validUntil": "2026-06-07T21:15:00.000Z",
+      "qrToken": "field2cur123",
+      "checkinsUsed": 11,
+      "checkinLimit": 16,
+      "isFull": false,
+      "displayKind": "current"
+    }
+  ]
+}
