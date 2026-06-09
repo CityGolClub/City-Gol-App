@@ -36,6 +36,7 @@ export const users = pgTable(
   },
   (table) => ({
     emailUnique: uniqueIndex("users_email_unique").on(table.email),
+    phoneUnique: uniqueIndex("users_phone_unique").on(table.phone),
   }),
 );
 

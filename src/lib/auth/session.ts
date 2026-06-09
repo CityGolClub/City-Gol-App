@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
+import { eq } from "drizzle-orm";
 
 import { SESSION_COOKIE_NAME } from "@/lib/constants/session";
-import users from "@mocks/users.json";
-
-type MockUser = (typeof users)[number];
+import { getDb } from "@/lib/db/client";
+import { users } from "@drizzle/schema";
 
 export async function createSession(userId: string) {
   const cookieStore = await cookies();
@@ -22,13 +22,20 @@ export async function clearSession() {
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
-export async function getSessionUser(): Promise<MockUser | null> {
+export async function getSessionUserId() {
   const cookieStore = await cookies();
-  const userId = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  return cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null;
+}
+
+export async function getSessionUser() {
+  const userId = await getSessionUserId();
 
   if (!userId) {
     return null;
   }
 
-  return users.find((user) => user.id === userId) ?? null;
+  const db = getDb();
+  const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+  return user ?? null;
 }

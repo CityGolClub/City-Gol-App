@@ -1,22 +1,19 @@
-import { getSessionUser } from "@/lib/auth/session";
+import { getSessionUserId } from "@/lib/auth/session";
 import { jsonError, jsonOk } from "@/lib/utils/http";
+import { getUserPanelPayload } from "@/lib/users/panel";
 
 export async function GET() {
-  const user = await getSessionUser();
+  const userId = await getSessionUserId();
 
-  if (!user) {
+  if (!userId) {
     return jsonError("No hay una sesion activa", 401);
   }
 
-  return jsonOk({
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    phone: user.phone,
-    birthDate: user.birthDate,
-    role: user.role,
-    team: user.team,
-    scores: user.scores,
-  });
+  const panel = await getUserPanelPayload(userId);
+
+  if (!panel) {
+    return jsonError("No encontramos el usuario autenticado", 404);
+  }
+
+  return jsonOk(panel);
 }

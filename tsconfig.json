@@ -28,6 +28,9 @@
       ],
       "@mocks/*": [
         "./mocks/*"
+      ],
+      "@drizzle/*": [
+        "./drizzle/*"
       ]
     }
   },

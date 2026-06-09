@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 
 import { createSession } from "@/lib/auth/session";
+import { findActiveUserByEmailAndPhone } from "@/lib/users/identity";
 import { jsonError, jsonOk } from "@/lib/utils/http";
 import { loginSchema } from "@/lib/validations/auth";
-import users from "@mocks/users.json";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -14,15 +14,9 @@ export async function POST(request: NextRequest) {
   }
 
   const { email, phone } = parsed.data;
-  const normalizedEmail = email.trim().toLowerCase();
-  const normalizedPhone = phone.replace(/\s+/g, "");
+  const user = await findActiveUserByEmailAndPhone(email, phone);
 
-  const user = users.find(
-    (candidate) =>
-      candidate.email.toLowerCase() === normalizedEmail && candidate.phone.replace(/\s+/g, "") === normalizedPhone,
-  );
-
-  if (!user || !user.isActive) {
+  if (!user) {
     return jsonError("No encontramos una cuenta con esos datos", 401);
   }
 
