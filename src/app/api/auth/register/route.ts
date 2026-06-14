@@ -1,20 +1,19 @@
 import { NextRequest } from "next/server";
 
 import { createSession } from "@/lib/auth/session";
-import { loginWithPassword } from "@/lib/auth/supabase-auth";
-import { jsonError, jsonOk } from "@/lib/utils/http";
-import { loginSchema } from "@/lib/validations/auth";
+import { registerWithPassword } from "@/lib/auth/supabase-auth";
+import { jsonCreated, jsonError } from "@/lib/utils/http";
+import { registerSchema } from "@/lib/validations/auth";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
-  const parsed = loginSchema.safeParse(body);
+  const parsed = registerSchema.safeParse(body);
 
   if (!parsed.success) {
-    return jsonError("Los datos ingresados no son validos", 400);
+    return jsonError("Completa todos los datos del registro", 400);
   }
 
-  const { email, password } = parsed.data;
-  const result = await loginWithPassword(email, password);
+  const result = await registerWithPassword(parsed.data);
 
   if (!result.success) {
     return jsonError(result.message, result.status);
@@ -22,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   await createSession(result.profile.id);
 
-  return jsonOk({
+  return jsonCreated({
     success: true,
     user: {
       id: result.profile.id,

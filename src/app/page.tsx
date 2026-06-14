@@ -1,5 +1,5 @@
 const cards = [
-  "Auth email + telefono",
+  "Auth email + password",
   "Fields selector",
   "QR panel por cancha",
   "Usuario autenticado",

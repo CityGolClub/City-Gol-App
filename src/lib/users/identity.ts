@@ -1,9 +1,9 @@
-import { and, eq, or } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 import { getDb } from "@/lib/db/client";
 import { users } from "@drizzle/schema";
 
-export type CheckinIdentityInput = {
+export type RegistrationInput = {
   firstName: string;
   lastName: string;
   email: string;
@@ -19,7 +19,7 @@ export function normalizePhone(phone: string) {
   return phone.replace(/\s+/g, "").trim();
 }
 
-export async function findUserByEmailOrPhone(email: string, phone: string) {
+export async function findUsersByEmailOrPhone(email: string, phone: string) {
   const db = getDb();
 
   return db
@@ -28,49 +28,37 @@ export async function findUserByEmailOrPhone(email: string, phone: string) {
     .where(or(eq(users.email, normalizeEmail(email)), eq(users.phone, normalizePhone(phone))));
 }
 
-export async function resolveCheckinUser(input: CheckinIdentityInput) {
+export async function createProfileForAuthUser(authUserId: string, input: RegistrationInput) {
   const db = getDb();
-  const email = normalizeEmail(input.email);
-  const phone = normalizePhone(input.phone);
-
-  const matches = await findUserByEmailOrPhone(email, phone);
-  const emailMatch = matches.find((candidate) => candidate.email === email);
-  const phoneMatch = matches.find((candidate) => candidate.phone === phone);
-
-  if (emailMatch && phoneMatch && emailMatch.id === phoneMatch.id) {
-    if (!emailMatch.isActive) {
-      return { ok: false as const, reason: "inactive" as const };
-    }
-
-    return { ok: true as const, user: emailMatch, created: false };
-  }
-
-  if (emailMatch || phoneMatch) {
-    return { ok: false as const, reason: "mismatch" as const };
-  }
 
   const [createdUser] = await db
     .insert(users)
     .values({
+      authUserId,
       firstName: input.firstName.trim(),
       lastName: input.lastName.trim(),
-      email,
-      phone,
+      email: normalizeEmail(input.email),
+      phone: normalizePhone(input.phone),
       birthDate: input.birthDate,
     })
     .returning();
 
-  return { ok: true as const, user: createdUser, created: true };
+  return createdUser;
 }
 
-export async function findActiveUserByEmailAndPhone(email: string, phone: string) {
+export async function findActiveUserByAuthUserId(authUserId: string) {
   const db = getDb();
+  const [user] = await db.select().from(users).where(eq(users.authUserId, authUserId)).limit(1);
 
-  const [user] = await db
-    .select()
-    .from(users)
-    .where(and(eq(users.email, normalizeEmail(email)), eq(users.phone, normalizePhone(phone)), eq(users.isActive, true)))
-    .limit(1);
+  if (!user || !user.isActive) {
+    return null;
+  }
 
+  return user;
+}
+
+export async function findUserByEmail(email: string) {
+  const db = getDb();
+  const [user] = await db.select().from(users).where(eq(users.email, normalizeEmail(email))).limit(1);
   return user ?? null;
 }

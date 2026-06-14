@@ -3,57 +3,75 @@
 ## Objective
 
 City Gol is a web application for player check-in at football fields.
-Users scan a QR code associated with a scheduled booking, authenticate, and confirm their arrival. Each valid check-in increases the user's score.
+Players scan a booking QR, authenticate with email and password, confirm their arrival, and then land in their user panel. Each valid check-in increases the user's score.
 
-This document centralizes the functional scope, business rules, and product decisions so any coding AI or team member can quickly understand the project.
+This document centralizes product rules, UX flows, and business decisions so any developer or coding AI can understand the project quickly.
 
-## Main Flow
+## Main User Flow
 
-1. A tablet located at City Gol displays the QR panel.
-2. The first screen shows all available fields.
-3. The operator selects one field.
-4. The app shows every QR currently visible for that field.
-5. A player scans the QR code.
-6. If the player is not authenticated, they go through the login flow.
-7. After authentication, the backend attempts the check-in.
-8. If the check-in is valid, it is recorded, the user's score is updated, and the user is redirected to their panel.
+1. A player arrives at City Gol.
+2. On the tablet, they select a field.
+3. The tablet shows every QR currently visible for that field.
+4. The player scans the QR that matches their booking.
+5. On the phone, the user lands on the check-in flow for that QR token.
+6. If the user is not authenticated:
+   - they see the login screen
+   - or they go to registration
+7. If the user logs in or registers successfully, the app returns them to the same QR token flow without requiring a second scan.
+8. The app attempts the check-in.
+9. If valid, it shows a success popup and the user panel underneath.
+10. The popup disappears automatically after a few seconds.
 
 ## Authentication
 
-The MVP login flow uses:
+Authentication uses:
 
 - email
-- phone number
+- password
 
-Current decisions:
+Supporting auth flows:
 
-- both email and phone are required for login
-- email must be unique
-- phone is required
-- the login must feel low-friction for casual users
-- the frontend may help with autofill on later visits
-- there is no password in the current MVP flow
+- registration
+- login
+- logout
+- forgot password
+- reset password
 
-Known technical debt:
+Decisions:
 
-- `email + phone` alone is not a strong authentication method
-- a future version is expected to add phone-based verification with automatic capture to reduce operational friction
+- phone remains mandatory in registration/profile
+- birth date remains mandatory in registration/profile
+- password recovery is handled through Supabase Auth email recovery
+- the app must preserve `qrToken` across login/registration and return the user to the pending check-in flow
 
-## Registration and User Data
+## Registration
 
-The auth/profile form must include these fields:
+Registration requires:
 
 - first name
 - last name
 - email
 - phone
 - birth date
+- password
 
-Current decisions:
+Rules:
 
-- there must be no profile image upload anywhere in the app
-- no avatar or user photo storage for now
-- the user profile may later show promotions or business information
+- email is unique
+- phone is required
+- the app uses Supabase Auth for credentials
+- the app uses its own `users` table for profile and business data
+
+## Password Recovery
+
+Password recovery flow:
+
+1. user opens `forgot password`
+2. user enters email
+3. Supabase sends recovery email
+4. user follows recovery link to the app
+5. user sets a new password
+6. user returns to login or directly continues if frontend keeps redirect context
 
 ## User Panel
 
@@ -81,14 +99,14 @@ Rules for teams:
 - the owner can accept or reject join requests
 - the owner can transfer ownership to another active member
 - the owner can leave only after transferring ownership, unless they delete the team as the only member
-- the booking may be associated with a team or may have no team at all
-- check-in is currently free and does not depend on belonging to the booking's team
+- a booking may optionally be associated with a team
+- check-in is currently free and does not require belonging to the booking's team
 
 ## Fields
 
 Fields are managed from the admin panel.
 
-Each field must have:
+Each field has:
 
 - name
 - field type: `futbol5` or `futbol8`
@@ -97,148 +115,104 @@ Each field must have:
 - active/inactive state
 - display order
 
-Important decisions:
+Rules:
 
+- images are allowed for fields
+- images live in Supabase Storage and the DB stores the URL/path
 - the global check-in limit is configured at field level
-- field images are allowed
-- images should live in Supabase Storage and the database should store their URL/path
-- there is no per-booking manual override for the check-in limit
-- deleting a field should not remove historical data
-- logical deletion or deactivation is preferred over destructive deletion
+- there is no per-booking manual override for the limit
+- logical deletion/deactivation is preferred over destructive deletion
 
 ## System Settings
 
-The following settings are global to the system and managed by admin:
+Admin manages these global settings:
 
 - booking duration in minutes
 - grace minutes for QR visibility and validity
 
 Rules:
 
-- grace minutes have a maximum of `30`
-- changes apply only to new bookings
+- grace minutes max is `30`
+- settings changes affect only new bookings
 
-## Bookings
+## Bookings and QR
 
 Each booking:
 
 - belongs to a field
-- has a start and end time
-- may optionally be associated with a team
-- generates its own QR token
-- stores a snapshot of the field's check-in limit at creation time
-- stores a snapshot of the system duration/grace behavior through its computed validity window
+- has start/end time
+- may optionally belong to a team
+- has its own QR token
+- stores the check-in limit snapshot used at creation time
 
-Rules:
-
-- two bookings cannot overlap on the same field
-- the snapshot is required so historical bookings remain consistent even if field limits or global settings change later
-
-## QR Rules
-
-The QR does not rotate continuously.
-It is regenerated once per booking.
-
-Rules:
+QR rules:
 
 - each booking has a unique QR token
-- the QR points to a check-in URL associated with that token
-- the QR is valid from `grace_minutes` before booking start
-- the QR remains valid until `grace_minutes` after booking end
-- because grace is configurable and can reach `30`, up to 3 QR codes may coexist for one field: previous, current, and next
+- QR validity starts `grace_minutes` before booking start
+- QR validity ends `grace_minutes` after booking end
+- because grace can be up to `30`, up to 3 QR codes may coexist for one field: previous, current, next
 
 ## Tablet QR Panel
 
 ### Screen 1: Field Selector
 
-The tablet must show all fields as selectable cards.
-Each card may show field image, name, and type.
-The operator chooses one field and enters the QR screen for that field.
+- shows all active fields
+- user/operator selects one field
 
-### Screen 2: QR Screen
+### Screen 2: QR Panel
 
-The selected field view must show:
+- shows all bookings currently visible for that field
+- each visible booking shows:
+  - time range
+  - QR
+  - used / limit
+  - status
 
-- back button
-- selected field name
-- every visible booking for the current moment
-- booking QR
-- current usage counter: `used / limit`
-- status: available, full, closed, etc.
-
-The backend should return all visible bookings in that moment rather than a fixed pair of `current + next`.
-The frontend can decide how to lay them out.
+The backend returns all visible bookings for the current moment; the frontend decides the layout.
 
 ## Check-In Rules
 
-A valid check-in must satisfy all of these conditions:
+A valid check-in requires:
 
-- the QR token exists
-- the booking is inside its valid time window
-- the booking has not reached the maximum allowed check-ins
-- the user has not already checked in for the same booking
+- valid QR token
+- active authenticated session
+- booking inside valid time window
+- booking not full
+- no previous check-in by the same user for that booking
 
 If valid:
 
-- create the check-in record
-- increment score values accordingly
+- create check-in record
+- increment `score_total`
+- increment `score_monthly`
+- increment `score_vigente`
 
 If invalid:
 
-- return a clear user-facing message
-- do not show technical errors to the user when it is a business-rule rejection
+- return a user-friendly message
+- do not show technical failure language for business-rule rejections
 
-Examples of rejection reasons:
-
-- QR not found
-- booking outside allowed time window
-- booking already full
-- user already checked in for that booking
-
-Examples of user-facing messages:
+Examples:
 
 - `Ya registramos tu llegada para este turno`
 - `Este turno ya alcanzo el maximo de check-ins`
 - `Este QR no esta disponible en este momento`
-
-## Check-In Limits
-
-The maximum number of check-ins is controlled globally by field settings.
-
-Important decisions:
-
-- admin defines the global limit at field level
-- that value applies to new bookings
-- each booking stores its own `checkin_limit_snapshot`
-- the UI must keep showing the QR even when the booking is full
-- the backend must block any additional check-ins after the limit is reached
+- `Necesitas iniciar sesion para hacer check-in`
 
 ## Score
 
-The system must track three score values:
+The app tracks:
 
 - `score_total`: historical accumulated score
-- `score_monthly`: score accumulated in the current calendar month
+- `score_monthly`: score for current calendar month
 - `score_vigente`: currently redeemable score
-
-Score rules:
-
-- each valid check-in adds `+1` to all three scores
-- admin can add or subtract score manually
-- manual adjustments must be tracked in history
-- redemptions consume only `score_vigente`
-- `score_total` is never reduced by redemption
-- deleting a check-in must reverse score effects accordingly
-
-## Redemptions
-
-Admin can register score redemptions.
 
 Rules:
 
-- a redemption subtracts points from `score_vigente`
-- redemptions must be logged historically
-- redemptions should remain separate from manual score adjustments
+- each valid check-in adds `+1` to all three scores
+- admin can add or subtract score manually
+- redemptions consume only `score_vigente`
+- deleting a check-in must reverse score impact accordingly
 
 ## Admin Panel
 
@@ -247,56 +221,57 @@ The admin panel must support:
 - admin authentication
 - user listing
 - search by name, email, or team
-- filters by `score_total`, `score_monthly`, and `score_vigente` with `greater than` or `less than` conditions
+- score-based filters for total/monthly/vigente
 - user profile editing
-- score adjustment (add or subtract)
+- score adjustments
 - redemption registration
-- field creation, editing, image management, and deactivation/deletion
-- field parameter management: type and global check-in limit
-- global system settings for booking duration and grace minutes
-- booking creation, editing, and deletion
-- booking monitoring with occupancy and state
-- check-in export to `xlsx` by date range
+- field CRUD and image management
+- field type and check-in limit management
+- global settings management
+- booking creation/edit/deletion
+- booking occupancy monitoring
+- xlsx export by date range
 
 ## Notifications
 
-Reminder emails are sent to all emails of the team associated with the booking, when a team exists.
+Reminder emails are sent to all emails of the team associated with a booking, when a team exists.
 
 Current decision:
 
-- use Resend for email delivery
-- if a booking has no team, no reminder is sent for now
+- use Resend for delivery
+- if a booking has no team, reminders are skipped for now
 
 ## Current Scope Decisions
 
-These are explicitly in scope:
+In scope:
 
-- login with email and phone
+- registration with email/password
+- login/logout/session
+- password recovery/reset
+- QR check-in flow with preserved redirect
 - user panel with editable info
-- score system with total, monthly, and vigente values
+- score system with total/monthly/vigente
 - team creation and join requests
-- owner approval and transfer workflow
+- owner transfer workflow
 - admin panel for users, fields, settings, bookings, score, redemptions, and exports
-- tablet QR panel per selected field
-- QR validity window with configurable grace period
+- tablet QR panel per field
 - booking-level QR token regeneration per booking
 - field image upload
 
-## Explicitly Out of Scope for Now
+Out of scope for now:
 
 - profile images
 - user photo storage
 - forcing team membership for check-in
 - per-booking custom check-in limit override
 - continuous QR rotation during a booking
-- strong phone/email verification in the MVP login flow
 
 ## Product Summary
 
 City Gol is a check-in app centered around these concepts:
 
-- users authenticate with low friction and keep multiple score values
-- teams are optional social/business grouping
+- users authenticate with email/password and keep multiple score values
+- a QR token is preserved across auth and resumed after login/register
 - fields define booking capacity behavior
 - system settings define booking duration and QR grace windows globally
 - each booking owns its own QR token

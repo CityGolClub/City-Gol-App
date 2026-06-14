@@ -5,17 +5,9 @@ loadEnv();
 
 import { eq, sql } from "drizzle-orm";
 
+import { createSupabaseAdminClient } from "@/lib/storage/supabase";
 import { getDb } from "@/lib/db/client";
-import {
-  bookings,
-  checkins,
-  fields,
-  systemSettings,
-  teamMembers,
-  teamJoinRequests,
-  teams,
-  users,
-} from "@drizzle/schema";
+import { bookings, fields, systemSettings, teamMembers, teams, users } from "@drizzle/schema";
 
 const ids = {
   admin: "11111111-1111-1111-1111-111111111111",
@@ -30,6 +22,48 @@ const ids = {
   bookingNext: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
 } as const;
 
+const seedAccounts = [
+  {
+    appId: ids.admin,
+    firstName: "Alex",
+    lastName: "Admin",
+    email: "admin@citygol.app",
+    phone: "+5491199999999",
+    birthDate: "1990-08-15",
+    role: "admin" as const,
+    password: "CityGol123!",
+    scoreTotal: 0,
+    scoreMonthly: 0,
+    scoreVigente: 0,
+  },
+  {
+    appId: ids.userJuan,
+    firstName: "Juan",
+    lastName: "Perez",
+    email: "juan@example.com",
+    phone: "+5491123456789",
+    birthDate: "1995-04-20",
+    role: "user" as const,
+    password: "CityGol123!",
+    scoreTotal: 22,
+    scoreMonthly: 6,
+    scoreVigente: 14,
+  },
+  {
+    appId: ids.userSofia,
+    firstName: "Sofia",
+    lastName: "Lopez",
+    email: "sofia@example.com",
+    phone: "+5491165432100",
+    birthDate: "1998-09-10",
+    role: "user" as const,
+    password: "CityGol123!",
+    scoreTotal: 5,
+    scoreMonthly: 2,
+    scoreVigente: 5,
+  },
+];
+
 function addHours(date: Date, hours: number) {
   return new Date(date.getTime() + hours * 60 * 60 * 1000);
 }
@@ -38,8 +72,48 @@ function addMinutes(date: Date, minutes: number) {
   return new Date(date.getTime() + minutes * 60 * 1000);
 }
 
+async function deleteExistingAuthUsers(emails: string[]) {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+
+  if (error) {
+    throw error;
+  }
+
+  const emailSet = new Set(emails.map((email) => email.toLowerCase()));
+  const matches = data.users.filter((user) => user.email && emailSet.has(user.email.toLowerCase()));
+
+  for (const match of matches) {
+    await admin.auth.admin.deleteUser(match.id);
+  }
+}
+
+async function createAuthUsers() {
+  const admin = createSupabaseAdminClient();
+  await deleteExistingAuthUsers(seedAccounts.map((account) => account.email));
+
+  const authIdsByEmail = new Map<string, string>();
+
+  for (const account of seedAccounts) {
+    const { data, error } = await admin.auth.admin.createUser({
+      email: account.email,
+      password: account.password,
+      email_confirm: true,
+    });
+
+    if (error || !data.user) {
+      throw error ?? new Error(`Could not create auth user for ${account.email}`);
+    }
+
+    authIdsByEmail.set(account.email, data.user.id);
+  }
+
+  return authIdsByEmail;
+}
+
 async function main() {
   const db = getDb();
+  const authIdsByEmail = await createAuthUsers();
   const now = new Date();
   const currentStart = new Date(now);
   currentStart.setMinutes(0, 0, 0);
@@ -67,39 +141,21 @@ async function main() {
     RESTART IDENTITY CASCADE
   `);
 
-  await db.insert(users).values([
-    {
-      id: ids.admin,
-      firstName: "Alex",
-      lastName: "Admin",
-      email: "admin@citygol.app",
-      phone: "+5491199999999",
-      birthDate: "1990-08-15",
-      role: "admin",
-    },
-    {
-      id: ids.userJuan,
-      firstName: "Juan",
-      lastName: "Perez",
-      email: "juan@example.com",
-      phone: "+5491123456789",
-      birthDate: "1995-04-20",
-      scoreTotal: 22,
-      scoreMonthly: 6,
-      scoreVigente: 14,
-    },
-    {
-      id: ids.userSofia,
-      firstName: "Sofia",
-      lastName: "Lopez",
-      email: "sofia@example.com",
-      phone: "+5491165432100",
-      birthDate: "1998-09-10",
-      scoreTotal: 5,
-      scoreMonthly: 2,
-      scoreVigente: 5,
-    },
-  ]);
+  await db.insert(users).values(
+    seedAccounts.map((account) => ({
+      id: account.appId,
+      authUserId: authIdsByEmail.get(account.email),
+      firstName: account.firstName,
+      lastName: account.lastName,
+      email: account.email,
+      phone: account.phone,
+      birthDate: account.birthDate,
+      role: account.role,
+      scoreTotal: account.scoreTotal,
+      scoreMonthly: account.scoreMonthly,
+      scoreVigente: account.scoreVigente,
+    })),
+  );
 
   await db.insert(teams).values({
     id: ids.teamOne,
@@ -184,7 +240,10 @@ async function main() {
     JSON.stringify(
       {
         seeded: true,
-        sampleUsers: [juan.email, "sofia@example.com", "admin@citygol.app"],
+        sampleUsers: seedAccounts.map((account) => ({
+          email: account.email,
+          password: account.password,
+        })),
         qrTokens: ["prev123", "cur123", "next123"],
       },
       null,

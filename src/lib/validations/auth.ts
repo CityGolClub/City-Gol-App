@@ -2,5 +2,24 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   email: z.string().trim().email(),
+  password: z.string().min(8),
+});
+
+export const registerSchema = z.object({
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
+  email: z.string().trim().email(),
   phone: z.string().trim().min(6),
+  birthDate: z.string().trim().min(1),
+  password: z.string().min(8),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email(),
+});
+
+export const resetPasswordSchema = z.object({
+  accessToken: z.string().trim().min(1),
+  refreshToken: z.string().trim().min(1),
+  password: z.string().min(8),
 });

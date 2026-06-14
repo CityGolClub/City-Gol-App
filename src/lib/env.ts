@@ -12,6 +12,10 @@ export function getDatabaseUrl() {
   return required("DATABASE_URL");
 }
 
+export function getAppUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+}
+
 export function getSupabaseUrl() {
   return required("NEXT_PUBLIC_SUPABASE_URL");
 }
