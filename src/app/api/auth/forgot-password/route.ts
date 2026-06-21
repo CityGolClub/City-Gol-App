@@ -13,12 +13,17 @@ export async function POST(request: NextRequest) {
     return jsonError("Ingresa un email valido", 400);
   }
 
-  const redirectTo = `${getAppUrl()}/reset-password`;
+  const redirectQuery = parsed.data.redirect ? `?redirect=${encodeURIComponent(parsed.data.redirect)}` : "";
+  const redirectTo = `${getAppUrl()}/reset-password${redirectQuery}`;
   const result = await sendPasswordReset(parsed.data.email, redirectTo);
 
   if (!result.success) {
     return jsonError(result.message, result.status);
   }
 
-  return jsonOk({ success: true, message: "Te enviamos un mail para recuperar la contrasena" });
+  return jsonOk({
+    success: true,
+    message: "Te enviamos un mail para recuperar la contrasena",
+    redirect: parsed.data.redirect ?? null,
+  });
 }

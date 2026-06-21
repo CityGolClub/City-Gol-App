@@ -45,6 +45,17 @@ export async function getBookingCheckinCount(bookingId: string) {
   return result?.value ?? 0;
 }
 
+export async function hasUserCheckedIn(bookingId: string, userId: string) {
+  const db = getDb();
+  const [existingCheckin] = await db
+    .select({ id: checkins.id })
+    .from(checkins)
+    .where(and(eq(checkins.bookingId, bookingId), eq(checkins.userId, userId)))
+    .limit(1);
+
+  return Boolean(existingCheckin);
+}
+
 export function getBookingAvailabilityState(booking: {
   validFrom: Date;
   validUntil: Date;

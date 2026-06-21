@@ -1,4 +1,5 @@
-import { getBookingAvailabilityState, getBookingByQrToken, getBookingCheckinCount } from "@/lib/checkin";
+import { getSessionUserId } from "@/lib/auth/session";
+import { getBookingAvailabilityState, getBookingByQrToken, getBookingCheckinCount, hasUserCheckedIn } from "@/lib/checkin";
 import { jsonError, jsonOk } from "@/lib/utils/http";
 
 export async function GET(_: Request, context: { params: Promise<{ token: string }> }) {
@@ -11,6 +12,8 @@ export async function GET(_: Request, context: { params: Promise<{ token: string
 
   const checkinsUsed = await getBookingCheckinCount(booking.id);
   const availability = getBookingAvailabilityState(booking, checkinsUsed);
+  const userId = await getSessionUserId();
+  const alreadyCheckedIn = userId ? await hasUserCheckedIn(booking.id, userId) : false;
 
   return jsonOk({
     booking: {
@@ -29,6 +32,10 @@ export async function GET(_: Request, context: { params: Promise<{ token: string
       isAvailable: availability.isAvailable,
       status: booking.status,
       message: availability.message,
+    },
+    viewer: {
+      authenticated: Boolean(userId),
+      alreadyCheckedIn,
     },
   });
 }

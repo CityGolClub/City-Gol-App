@@ -1,7 +1,7 @@
 import { getSessionUserId } from "@/lib/auth/session";
 import { confirmCheckin, getBookingByQrToken } from "@/lib/checkin";
 import { jsonError, jsonOk } from "@/lib/utils/http";
-import { getUserPanelPayload } from "@/lib/users/panel";
+import { getUserPanelPayload, getUserPanelSummary } from "@/lib/users/panel";
 import { checkinConfirmSchema } from "@/lib/validations/checkin";
 
 export async function POST(request: Request) {
@@ -31,8 +31,9 @@ export async function POST(request: Request) {
   }
 
   const panel = await getUserPanelPayload(userId);
+  const panelSummary = await getUserPanelSummary(userId);
 
-  if (!panel) {
+  if (!panel || !panelSummary) {
     return jsonError("No pudimos cargar el panel del usuario", 500);
   }
 
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
       endsAt: booking.endsAt,
     },
     scores: panel.scores,
+    panelSummary,
     panel,
   });
 }

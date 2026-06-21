@@ -22,7 +22,8 @@ Request:
   "email": "juan@example.com",
   "phone": "+5491123456789",
   "birthDate": "1995-04-20",
-  "password": "CityGol123!"
+  "password": "CityGol123!",
+  "redirect": "/checkin/cur123"
 }
 ```
 
@@ -31,6 +32,7 @@ Success `201`:
 ```json
 {
   "success": true,
+  "redirect": "/checkin/cur123",
   "user": {
     "id": "user_1",
     "firstName": "Juan",
@@ -60,7 +62,8 @@ Request:
 ```json
 {
   "email": "juan@example.com",
-  "password": "CityGol123!"
+  "password": "CityGol123!",
+  "redirect": "/checkin/cur123"
 }
 ```
 
@@ -69,6 +72,7 @@ Success `200`:
 ```json
 {
   "success": true,
+  "redirect": "/checkin/cur123",
   "user": {
     "id": "user_1",
     "firstName": "Juan",
@@ -136,7 +140,8 @@ Request:
 
 ```json
 {
-  "email": "juan@example.com"
+  "email": "juan@example.com",
+  "redirect": "/checkin/cur123"
 }
 ```
 
@@ -145,7 +150,8 @@ Success `200`:
 ```json
 {
   "success": true,
-  "message": "Te enviamos un mail para recuperar la contrasena"
+  "message": "Te enviamos un mail para recuperar la contrasena",
+  "redirect": "/checkin/cur123"
 }
 ```
 
@@ -198,6 +204,10 @@ Success `200`:
     "isAvailable": true,
     "status": "scheduled",
     "message": null
+  },
+  "viewer": {
+    "authenticated": true,
+    "alreadyCheckedIn": false
   }
 }
 ```
@@ -233,6 +243,23 @@ Success `200`:
     "total": 23,
     "monthly": 7,
     "vigente": 15
+  },
+  "panelSummary": {
+    "user": {
+      "id": "user_1",
+      "firstName": "Juan",
+      "lastName": "Perez"
+    },
+    "team": {
+      "id": "team_1",
+      "name": "Los Pibes",
+      "isOwner": true
+    },
+    "scores": {
+      "total": 23,
+      "monthly": 7,
+      "vigente": 15
+    }
   },
   "panel": {
     "id": "user_1",
