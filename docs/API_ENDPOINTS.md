@@ -314,7 +314,11 @@ Purpose: list active fields for the tablet selector.
 
 Purpose: return all bookings currently visible for one field.
 
-This endpoint still needs to be moved fully from mocks to DB-backed dynamic calculation in the next phase.
+Current behavior:
+
+- DB-backed
+- calculates `visibleBookings[]` from active bookings whose valid window contains `now`
+- includes live `checkinsUsed`, `isFull`, `isAvailable`, and `displayKind`
 
 ## Remaining Planned Endpoints
 
