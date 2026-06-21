@@ -1,8 +1,11 @@
 import { z } from "zod";
 
+const redirectField = z.string().trim().min(1).optional();
+
 export const loginSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(8),
+  redirect: redirectField,
 });
 
 export const registerSchema = z.object({
@@ -12,10 +15,12 @@ export const registerSchema = z.object({
   phone: z.string().trim().min(6),
   birthDate: z.string().trim().min(1),
   password: z.string().min(8),
+  redirect: redirectField,
 });
 
 export const forgotPasswordSchema = z.object({
   email: z.string().trim().email(),
+  redirect: redirectField,
 });
 
 export const resetPasswordSchema = z.object({

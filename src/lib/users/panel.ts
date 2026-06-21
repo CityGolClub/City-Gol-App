@@ -45,3 +45,21 @@ export async function getUserPanelPayload(userId: string) {
     },
   };
 }
+
+export async function getUserPanelSummary(userId: string) {
+  const panel = await getUserPanelPayload(userId);
+
+  if (!panel) {
+    return null;
+  }
+
+  return {
+    user: {
+      id: panel.id,
+      firstName: panel.firstName,
+      lastName: panel.lastName,
+    },
+    team: panel.team,
+    scores: panel.scores,
+  };
+}

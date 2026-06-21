@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
 
   return jsonCreated({
     success: true,
+    redirect: parsed.data.redirect ?? null,
     user: {
       id: result.profile.id,
       firstName: result.profile.firstName,

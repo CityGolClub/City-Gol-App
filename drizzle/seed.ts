@@ -72,6 +72,18 @@ function addMinutes(date: Date, minutes: number) {
   return new Date(date.getTime() + minutes * 60 * 1000);
 }
 
+function startOfDay(date: Date) {
+  const value = new Date(date);
+  value.setHours(0, 0, 0, 0);
+  return value;
+}
+
+function endOfDay(date: Date) {
+  const value = new Date(date);
+  value.setHours(23, 59, 59, 999);
+  return value;
+}
+
 async function deleteExistingAuthUsers(emails: string[]) {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
@@ -114,9 +126,8 @@ async function createAuthUsers() {
 async function main() {
   const db = getDb();
   const authIdsByEmail = await createAuthUsers();
-  const now = new Date();
-  const currentStart = new Date(now);
-  currentStart.setMinutes(0, 0, 0);
+  const currentStart = new Date();
+  currentStart.setHours(20, 0, 0, 0);
 
   const currentEnd = addHours(currentStart, 1);
   const prevStart = addHours(currentStart, -1);
@@ -213,8 +224,9 @@ async function main() {
       teamId: ids.teamOne,
       startsAt: currentStart,
       endsAt: currentEnd,
-      validFrom: addMinutes(currentStart, -30),
-      validUntil: addMinutes(currentEnd, 30),
+      // Keep one stable demo QR available all day for frontend work.
+      validFrom: startOfDay(currentStart),
+      validUntil: endOfDay(currentStart),
       qrToken: "cur123",
       checkinLimitSnapshot: 10,
     },

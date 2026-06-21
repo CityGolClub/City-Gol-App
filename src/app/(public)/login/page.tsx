@@ -1,4 +1,10 @@
-export default function LoginPage() {
+import { LoginForm } from "@/modules/auth/ui/login-form";
+
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ redirect?: string }> }) {
+  const { redirect } = await searchParams;
+  const registerHref = redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : "/register";
+  const forgotPasswordHref = redirect ? `/forgot-password?redirect=${encodeURIComponent(redirect)}` : "/forgot-password";
+
   return (
     <main className="mx-auto flex min-h-screen max-w-xl items-center px-6 py-12">
       <section className="w-full rounded-3xl bg-white p-8 shadow-sm">

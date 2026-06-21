@@ -202,6 +202,8 @@ Recommended mapping:
 - `POST /api/checkin/confirm` requires authenticated session
 - check-in no longer creates users automatically
 - after login/register, the user returns to the original QR flow and confirms check-in
+- `/checkin/[token]` is the main phone entrypoint after scanning a QR
+- if the user is not authenticated, `/checkin/[token]` renders login inline and links out to register/forgot password
 
 ### Scores
 
