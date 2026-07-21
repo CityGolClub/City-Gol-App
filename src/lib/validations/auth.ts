@@ -15,6 +15,7 @@ export const registerSchema = z.object({
   phone: z.string().trim().min(6),
   birthDate: z.string().trim().min(1),
   password: z.string().min(8),
+  repeatPassword: z.string().min(8),
   redirect: redirectField,
 });
 

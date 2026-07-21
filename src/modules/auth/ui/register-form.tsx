@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
+import { required } from "zod/v4-mini";
 
 type RegisterFormProps = {
   redirect?: string;
@@ -21,6 +22,7 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
     phone: "",
     birthDate: "",
     password: "",
+    repeatPassword: "",
   });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -58,22 +60,23 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
       {[
         { key: "firstName", label: "Nombre", type: "text" },
         { key: "lastName", label: "Apellido", type: "text" },
         { key: "email", label: "Email", type: "email" },
         { key: "phone", label: "Telefono", type: "tel" },
         { key: "birthDate", label: "Fecha de nacimiento", type: "date" },
-        { key: "password", label: "Password", type: "password" },
+        { key: "password", label: "Contraseña", type: "password" },
+        { key: "repeatPassword", label: "Confirmar Contraseña", type: "password" },
       ].map((field) => (
-        <div className="flex flex-col gap-2" key={field.key}>
-          <label className="text-sm font-medium" htmlFor={`register-${field.key}`}>
+        <div className="flex flex-col" key={field.key}>
+          <label className="text-sm font-sm font-Citigol" htmlFor={`register-${field.key}`}>
             {field.label}
           </label>
           <input
             id={`register-${field.key}`}
-            className="rounded-xl border border-slate-300 px-4 py-3"
+            className="block w-full border-2 border-gray-300 rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6 font-Citigol"
             type={field.type}
             value={form[field.key as keyof typeof form]}
             onChange={(event) =>
@@ -82,20 +85,23 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
                 [field.key]: event.target.value,
               }))
             }
-            required
+            required 
           />
         </div>
       ))}
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
-      <button className="rounded-xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60" disabled={submitting} type="submit">
+      <button className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-Citigol text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" type="submit" disabled={submitting}>
         {submitting ? "Creando cuenta..." : "Crear cuenta"}
       </button>
 
-      <a className="text-sm text-slate-600 underline" href={loginHref}>
-        Ya tengo cuenta
-      </a>
+      <p className="mt-2 text-center text-sm/6 text-400">
+          ¿Ya tienes cuenta?{' '}
+          <a className="font-semibold font-Citigol text-indigo-400 hover:text-indigo-300" href={loginHref}>
+            Inicia sesion
+          </a>
+        </p>
     </form>
   );
 }

@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-
 import { createSession } from "@/lib/auth/session";
 import { registerWithPassword } from "@/lib/auth/supabase-auth";
 import { jsonCreated, jsonError } from "@/lib/utils/http";
