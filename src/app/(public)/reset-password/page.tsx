@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ResetPasswordForm } from "@/modules/auth/ui/reset-password-form";
 import LogoCitygol from "../../../imgs/Logo-Citygol.png"
 
@@ -11,7 +12,9 @@ export default function ResetPasswordPage() {
         <h1 className="mt-4 text-2xl font-bold">Nueva contraseña</h1>
         <p className="mt-3 text-slate-600">Completa con tu nueva contraseña para volver a ingresar.</p>
         <div className="mt-6">
-          <ResetPasswordForm />
+          <Suspense fallback={null}>
+            <ResetPasswordForm />
+          </Suspense>
         </div>
       </section>
     </main>
