@@ -158,6 +158,7 @@ QR rules:
 
 - shows all active fields
 - user/operator selects one field
+- no field is auto-selected in the tablet flow
 
 ### Screen 2: QR Panel
 
@@ -167,6 +168,7 @@ QR rules:
   - QR
   - used / limit
   - status
+- includes a `Volver` action to return to the field selector
 
 The backend returns all visible bookings for the current moment; the frontend decides the layout.
 
