@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-
 import { createSession } from "@/lib/auth/session";
 import { registerWithPassword } from "@/lib/auth/supabase-auth";
 import { jsonCreated, jsonError } from "@/lib/utils/http";
@@ -7,6 +6,17 @@ import { registerSchema } from "@/lib/validations/auth";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
+
+  if (
+    body &&
+    typeof body === "object" &&
+    "password" in body &&
+    "repeatPassword" in body &&
+    body.password !== body.repeatPassword
+  ) {
+    return jsonError("Las contraseñas no coinciden", 400);
+  }
+
   const parsed = registerSchema.safeParse(body);
 
   if (!parsed.success) {

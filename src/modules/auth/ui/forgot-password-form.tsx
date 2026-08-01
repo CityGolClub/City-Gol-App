@@ -45,15 +45,17 @@ export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+   
+      <form className="flex flex-col gap-2 scroll-auto" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium" htmlFor="forgot-email">
           Email
         </label>
         <input
           id="forgot-email"
-          className="rounded-xl border border-slate-300 px-4 py-3"
+          className="block w-full border-2 border-gray-300 rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6"
           type="email"
+          placeholder="Ingresa tu email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -63,9 +65,9 @@ export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
 
-      <button className="rounded-xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60" disabled={submitting} type="submit">
+      <button type="submit" disabled={submitting} className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         {submitting ? "Enviando..." : "Enviar mail de recuperacion"}
       </button>
-    </form>
+      </form>
   );
 }

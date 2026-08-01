@@ -16,4 +16,4 @@ export async function GET() {
   }
 
   return jsonOk(panel);
-}
+} 

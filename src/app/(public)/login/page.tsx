@@ -1,4 +1,5 @@
 import { LoginForm } from "@/modules/auth/ui/login-form";
+import LogoCitygol from "../../../imgs/Logo-Citygol.png"
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ redirect?: string }> }) {
   const { redirect } = await searchParams;
@@ -6,13 +7,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const forgotPasswordHref = redirect ? `/forgot-password?redirect=${encodeURIComponent(redirect)}` : "/forgot-password";
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-xl items-center px-6 py-12">
-      <section className="w-full rounded-3xl bg-white p-8 shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">City Gol</p>
-        <h1 className="mt-4 text-3xl font-bold">Login MVP</h1>
-        <p className="mt-3 text-slate-600">Inicia sesion para continuar con tu check-in o entrar a tu panel.</p>
-        <div className="mt-6">
-          <LoginForm redirect={redirect} registerHref={registerHref} forgotPasswordHref={forgotPasswordHref} />
+      <main className="w-full h-full px-[8vw] font-Citigol scroll-auto
+      py-[6vw] bg-cover bg-center flex flex-col items-center
+      bg-[linear-gradient(rgba(46,82,80,0.8),rgba(23,124,119,0.8))]">
+        <img className="h-30 w-23"src={LogoCitygol.src} alt="Citygol Logo" />
+      <section className="space-y-4 w-full max-w-[500px] bg-white rounded-lg flex flex-col p-10 shadow-[0_4px_8px_rgba(0,0,0,0.1)] mb-5">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <LoginForm redirect={redirect} registerHref={registerHref} forgotPasswordHref={forgotPasswordHref}/>
         </div>
       </section>
     </main>

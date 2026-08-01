@@ -65,7 +65,7 @@ export function ResetPasswordForm() {
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium" htmlFor="reset-password">
-          Nueva contrasena
+          Nueva contraseña
         </label>
         <input
           id="reset-password"
@@ -82,8 +82,8 @@ export function ResetPasswordForm() {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
 
-      <button className="rounded-xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60" disabled={submitting || missingTokens} type="submit">
-        {submitting ? "Actualizando..." : "Guardar nueva contrasena"}
+      <button type="submit" disabled={submitting || missingTokens} className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        {submitting ? "Actualizando..." : "Guardar nueva contraseña"}
       </button>
     </form>
   );
