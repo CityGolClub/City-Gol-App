@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
@@ -56,8 +56,15 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
   const [data, setData] = useState<QrPanelResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [origin, setOrigin] = useState(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000");
 
-  const appUrl = useMemo(() => process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000", []);
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    setOrigin(window.location.origin);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -131,7 +138,7 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
       {data?.visibleBookings.length ? (
         <section className="grid gap-5 xl:grid-cols-3">
           {data.visibleBookings.map((booking) => {
-            const qrValue = `${appUrl}/checkin/${booking.qrToken}`;
+            const qrValue = `${origin}/checkin/${booking.qrToken}`;
 
             return (
               <article key={booking.id} className="rounded-3xl bg-white p-8 shadow-sm">

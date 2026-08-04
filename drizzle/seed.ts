@@ -84,6 +84,12 @@ function endOfDay(date: Date) {
   return value;
 }
 
+function addDays(date: Date, days: number) {
+  const value = new Date(date);
+  value.setDate(value.getDate() + days);
+  return value;
+}
+
 async function deleteExistingAuthUsers(emails: string[]) {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
@@ -224,9 +230,9 @@ async function main() {
       teamId: ids.teamOne,
       startsAt: currentStart,
       endsAt: currentEnd,
-      // Keep one stable demo QR available all day for frontend work.
-      validFrom: startOfDay(currentStart),
-      validUntil: endOfDay(currentStart),
+      // Keep one stable demo QR visible for an extended period while frontend is being built.
+      validFrom: startOfDay(addDays(currentStart, -30)),
+      validUntil: endOfDay(addDays(currentStart, 30)),
       qrToken: "cur123",
       checkinLimitSnapshot: 10,
     },
