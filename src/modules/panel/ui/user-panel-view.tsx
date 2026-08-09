@@ -1,3 +1,5 @@
+import { LogoutButton } from "@/components/logout-button";
+
 type UserPanelPayload = {
   id: string;
   firstName: string;
@@ -36,27 +38,28 @@ export function UserPanelView({ user }: { user: UserPanelPayload }) {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-10">
       <section className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">City Gol</p>
-        <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Mi panel</h1>
-        <p className="mt-2 text-sm text-slate-600 sm:text-base">
-          Bienvenido, {user.firstName} {user.lastName}.
-        </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">City Gol</p>
+            <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Mi panel</h1>
+            <p className="mt-2 text-sm text-slate-600 sm:text-base">
+              Bienvenido, {user.firstName} {user.lastName}.
+            </p>
+          </div>
+
+          <LogoutButton className="rounded-2xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-slate-50" />
+        </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <article className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
-          <p className="text-sm font-medium text-slate-500">Score total</p>
-          <p className="mt-3 text-3xl font-bold text-slate-900">{user.scores.total}</p>
-        </article>
-
-        <article className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
+      <section className="grid grid-cols-2 gap-3 sm:gap-4">
+        <article className="rounded-3xl bg-white p-4 shadow-sm sm:p-6">
           <p className="text-sm font-medium text-slate-500">Score mensual</p>
-          <p className="mt-3 text-3xl font-bold text-slate-900">{user.scores.monthly}</p>
+          <p className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">{user.scores.monthly}</p>
         </article>
 
-        <article className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
+        <article className="rounded-3xl bg-white p-4 shadow-sm sm:p-6">
           <p className="text-sm font-medium text-slate-500">Score vigente</p>
-          <p className="mt-3 text-3xl font-bold text-slate-900">{user.scores.vigente}</p>
+          <p className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">{user.scores.vigente}</p>
         </article>
       </section>
 
