@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { LoginForm } from "@/modules/auth/ui/login-form";
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
@@ -80,6 +81,7 @@ function formatRange(start: string, end: string) {
 }
 
 export function CheckinFlow({ token }: CheckinFlowProps) {
+  const router = useRouter();
   const [payload, setPayload] = useState<BookingPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -112,18 +114,6 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
   useEffect(() => {
     void loadBooking();
   }, [loadBooking]);
-
-  useEffect(() => {
-    if (!confirmation) {
-      return;
-    }
-
-    const timeout = window.setTimeout(() => {
-      setConfirmation(null);
-    }, 2500);
-
-    return () => window.clearTimeout(timeout);
-  }, [confirmation]);
 
   const registerHref = useMemo(() => `/register?redirect=${encodeURIComponent(`/checkin/${token}`)}`, [token]);
   const forgotPasswordHref = useMemo(() => `/forgot-password?redirect=${encodeURIComponent(`/checkin/${token}`)}`, [token]);
@@ -167,19 +157,19 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
   const showStatusOnly = Boolean(booking && (!booking.isAvailable || booking.isFull || viewer?.alreadyCheckedIn));
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 px-6 py-12">
-      <section className="rounded-3xl bg-white p-8 shadow-sm">
+    <main className="relative mx-auto flex min-h-screen max-w-4xl flex-col gap-6 bg-[#f5f8ff] px-4 py-6 sm:px-6 sm:py-10">
+      <section className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">City Gol</p>
-        <h1 className="mt-4 text-3xl font-bold">Check-in</h1>
+        <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Check-in</h1>
 
         {loading ? <p className="mt-4 text-slate-600">Cargando turno...</p> : null}
 
         {!loading && !booking ? <p className="mt-4 text-red-600">{statusMessage ?? "No pudimos cargar el turno"}</p> : null}
 
         {booking ? (
-          <div className="mt-6 rounded-2xl border border-slate-200 p-6">
+          <div className="mt-6 rounded-3xl border border-slate-200 p-5 sm:p-6">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{booking.fieldType}</p>
-            <h2 className="mt-2 text-2xl font-bold">{booking.fieldName}</h2>
+            <h2 className="mt-3 text-2xl font-bold sm:text-3xl">{booking.fieldName}</h2>
             <p className="mt-2 text-lg font-semibold">{formatRange(booking.startsAt, booking.endsAt)}</p>
             <p className="mt-2 text-sm text-slate-600">
               {booking.checkinsUsed} / {booking.checkinLimit} check-ins
@@ -188,7 +178,7 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
             {statusMessage ? <p className="mt-4 text-sm text-slate-700">{statusMessage}</p> : null}
 
             {showLogin ? (
-              <div className="mt-6 rounded-2xl border border-slate-200 p-4">
+              <div className="mt-6 rounded-3xl border border-slate-200 p-4 sm:p-5">
                 <h3 className="text-lg font-semibold">Inicia sesion para confirmar tu llegada</h3>
                 <div className="mt-4">
                   <LoginForm
@@ -204,7 +194,7 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
             {showCheckinButton ? (
               <div className="mt-6 flex flex-col gap-3">
                 <button
-                  className="rounded-xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
+                  className="w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
                   disabled={submitting}
                   onClick={handleCheckin}
                   type="button"
@@ -224,40 +214,36 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
       </section>
 
       {confirmation ? (
-        <section className="rounded-3xl border border-emerald-300 bg-emerald-50 p-6 text-emerald-900 shadow-sm">
-          <h2 className="text-xl font-bold">{confirmation.message}</h2>
-          <p className="mt-2 text-sm">Este mensaje se cierra automaticamente en 2.5 segundos.</p>
-        </section>
-      ) : null}
-
-      {confirmation?.panelSummary ? (
-        <section className="rounded-3xl bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-bold">Resumen del panel</h2>
-          <p className="mt-3 text-slate-700">
-            {confirmation.panelSummary.user.firstName} {confirmation.panelSummary.user.lastName}
-          </p>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
-            <article className="rounded-2xl border border-slate-200 p-4">
-              <p className="text-sm text-slate-500">Score total</p>
-              <p className="mt-2 text-2xl font-bold">{confirmation.panelSummary.scores.total}</p>
-            </article>
-            <article className="rounded-2xl border border-slate-200 p-4">
-              <p className="text-sm text-slate-500">Score mensual</p>
-              <p className="mt-2 text-2xl font-bold">{confirmation.panelSummary.scores.monthly}</p>
-            </article>
-            <article className="rounded-2xl border border-slate-200 p-4">
-              <p className="text-sm text-slate-500">Score vigente</p>
-              <p className="mt-2 text-2xl font-bold">{confirmation.panelSummary.scores.vigente}</p>
-            </article>
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-slate-200 p-4">
-            <p className="text-sm text-slate-500">Equipo</p>
-            <p className="mt-2 text-lg font-semibold">
-              {confirmation.panelSummary.team ? confirmation.panelSummary.team.name : "Sin equipo"}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 px-4 py-6">
+          <section className="w-full max-w-xl rounded-[32px] bg-white p-6 shadow-2xl sm:p-8">
+            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-cyan-700 text-5xl text-white">✓</div>
+            <h2 className="mt-6 text-center text-3xl font-bold text-cyan-800">Check-in Exitoso!</h2>
+            <p className="mx-auto mt-4 max-w-md text-center text-base leading-7 text-slate-700">
+              Tu llegada para la reserva de <span className="font-semibold">{confirmation.booking.fieldName}</span> ha sido confirmada.
+              Todo esta listo para que inicies tu partido.
             </p>
-          </div>
-        </section>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <article className="rounded-2xl border border-slate-200 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Cancha</p>
+                <p className="mt-2 text-2xl font-bold text-slate-900">{confirmation.booking.fieldName}</p>
+              </article>
+
+              <article className="rounded-2xl border border-slate-200 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Hora</p>
+                <p className="mt-2 text-2xl font-bold text-slate-900">{formatRange(confirmation.booking.startsAt, confirmation.booking.endsAt)}</p>
+              </article>
+            </div>
+
+            <button
+              className="mt-6 w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white"
+              onClick={() => router.push("/panel")}
+              type="button"
+            >
+              Ir a mi panel
+            </button>
+          </section>
+        </div>
       ) : null}
     </main>
   );
