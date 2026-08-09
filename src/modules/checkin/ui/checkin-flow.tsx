@@ -161,57 +161,61 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
       <section className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">City Gol</p>
         <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Check-in</h1>
-
-        {loading ? <p className="mt-4 text-slate-600">Cargando turno...</p> : null}
-
-        {!loading && !booking ? <p className="mt-4 text-red-600">{statusMessage ?? "No pudimos cargar el turno"}</p> : null}
-
-        {booking ? (
-          <div className="mt-6 rounded-3xl border border-slate-200 p-5 sm:p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{booking.fieldType}</p>
-            <h2 className="mt-3 text-2xl font-bold sm:text-3xl">{booking.fieldName}</h2>
-            <p className="mt-2 text-lg font-semibold">{formatRange(booking.startsAt, booking.endsAt)}</p>
-            <p className="mt-2 text-sm text-slate-600">
-              {booking.checkinsUsed} / {booking.checkinLimit} check-ins
-            </p>
-
-            {statusMessage ? <p className="mt-4 text-sm text-slate-700">{statusMessage}</p> : null}
-
-            {showLogin ? (
-              <div className="mt-6 rounded-3xl border border-slate-200 p-4 sm:p-5">
-                <h3 className="text-lg font-semibold">Inicia sesion para confirmar tu llegada</h3>
-                <div className="mt-4">
-                  <LoginForm
-                    redirect={`/checkin/${token}`}
-                    onSuccess={loadBooking}
-                    registerHref={registerHref}
-                    forgotPasswordHref={forgotPasswordHref}
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            {showCheckinButton ? (
-              <div className="mt-6 flex flex-col gap-3">
-                <button
-                  className="w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
-                  disabled={submitting}
-                  onClick={handleCheckin}
-                  type="button"
-                >
-                  {submitting ? "Confirmando..." : "Hacer check-in"}
-                </button>
-              </div>
-            ) : null}
-
-            {showStatusOnly && !showLogin && !showCheckinButton ? (
-              <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-                {statusMessage ?? "Este turno no permite nuevas acciones en este momento"}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
       </section>
+
+      {loading ? <p className="text-slate-600">Cargando turno...</p> : null}
+
+      {!loading && !booking ? (
+        <section className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
+          <p className="text-red-600">{statusMessage ?? "No pudimos cargar el turno"}</p>
+        </section>
+      ) : null}
+
+      {booking ? (
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{booking.fieldType}</p>
+          <h2 className="mt-3 text-2xl font-bold sm:text-3xl">{booking.fieldName}</h2>
+          <p className="mt-2 text-lg font-semibold">{formatRange(booking.startsAt, booking.endsAt)}</p>
+          <p className="mt-2 text-sm text-slate-600">
+            {booking.checkinsUsed} / {booking.checkinLimit} check-ins
+          </p>
+
+          {statusMessage ? <p className="mt-4 text-sm text-slate-700">{statusMessage}</p> : null}
+
+          {showStatusOnly && !showLogin && !showCheckinButton ? (
+            <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
+              {statusMessage ?? "Este turno no permite nuevas acciones en este momento"}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {showLogin ? (
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <h3 className="text-2xl font-bold leading-tight sm:text-3xl">Inicia sesion para confirmar tu llegada</h3>
+          <div className="mt-5">
+            <LoginForm
+              redirect={`/checkin/${token}`}
+              onSuccess={loadBooking}
+              registerHref={registerHref}
+              forgotPasswordHref={forgotPasswordHref}
+            />
+          </div>
+        </section>
+      ) : null}
+
+      {showCheckinButton ? (
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <button
+            className="w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
+            disabled={submitting}
+            onClick={handleCheckin}
+            type="button"
+          >
+            {submitting ? "Confirmando..." : "Hacer check-in"}
+          </button>
+        </section>
+      ) : null}
 
       {confirmation ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 px-4 py-6">

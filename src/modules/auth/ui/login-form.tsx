@@ -53,7 +53,7 @@ export function LoginForm({ redirect, onSuccess, registerHref = "/register", for
   }
 
   return (
-    <form className="flex flex-col gap-2 font-Citigol" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-3 font-Citigol" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <label className="text-sm font-Citigol" htmlFor="login-email">
           Email
@@ -83,7 +83,7 @@ export function LoginForm({ redirect, onSuccess, registerHref = "/register", for
           required
         />
       </div>
-      <div className="flex justify-between items-center text-sm font-Citigol">
+      <div className="flex justify-between items-center text-sm font-Citigol pt-1">
         <a href={forgotPasswordHref} className="font-Citigol text-indigo-200 hover:text-teal-600">
           ¿Olvidaste tu contraseña?
         </a>
