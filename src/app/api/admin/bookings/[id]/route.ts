@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { requireAdminApiSession } from "@/lib/auth/admin";
 import { buildBookingWindow, findBookingOverlap, getFieldLimitSnapshot, getLatestSystemSettings } from "@/lib/admin/bookings";
 import { getDb } from "@/lib/db/client";
+import { parseArgentinaDateTimeLocal } from "@/lib/datetime";
 import { jsonError, jsonOk } from "@/lib/utils/http";
 import { bookings } from "@drizzle/schema";
 import { z } from "zod";
@@ -29,8 +30,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   const fieldLimit = await getFieldLimitSnapshot(parsed.data.fieldId);
   if (!fieldLimit) return jsonError("No encontramos la cancha del turno", 404);
 
-  const startsAt = new Date(parsed.data.startsAt);
-  if (Number.isNaN(startsAt.getTime())) return jsonError("La fecha del turno no es valida", 400);
+  const startsAt = parseArgentinaDateTimeLocal(parsed.data.startsAt);
+  if (!startsAt) return jsonError("La fecha del turno no es valida", 400);
 
   const { endsAt, validFrom, validUntil } = buildBookingWindow(startsAt, settings.bookingDurationMinutes, settings.graceMinutes);
   const overlap = await findBookingOverlap(parsed.data.fieldId, startsAt, endsAt, id);

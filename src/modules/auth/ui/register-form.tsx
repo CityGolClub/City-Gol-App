@@ -4,7 +4,6 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
-import { required } from "zod/v4-mini";
 
 type RegisterFormProps = {
   redirect?: string;
@@ -70,13 +69,13 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
         { key: "password", label: "Contraseña", type: "password" },
         { key: "repeatPassword", label: "Confirmar Contraseña", type: "password" },
       ].map((field) => (
-        <div className="flex flex-col" key={field.key}>
+        <div className="flex w-full min-w-0 flex-col" key={field.key}>
           <label className="text-sm font-sm font-Citigol" htmlFor={`register-${field.key}`}>
             {field.label}
           </label>
           <input
             id={`register-${field.key}`}
-            className="block w-full border-2 border-gray-300 rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6 font-Citigol"
+            className={`block w-full min-w-0 max-w-full rounded-md border-2 border-gray-300 bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6 font-Citigol ${field.type === "date" ? "appearance-none pr-3" : ""}`}
             type={field.type}
             value={form[field.key as keyof typeof form]}
             onChange={(event) =>

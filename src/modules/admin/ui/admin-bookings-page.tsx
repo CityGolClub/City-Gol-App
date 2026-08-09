@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
+import { formatArgentinaDateTimeLocalInput } from "@/lib/datetime";
 
 type BookingItem = {
   id: string;
@@ -166,7 +167,7 @@ export function AdminBookingsPage() {
                             id: item.id,
                             fieldId: item.fieldId,
                             teamId: item.teamId ?? "",
-                            startsAt: item.startsAt.slice(0, 16),
+                            startsAt: formatArgentinaDateTimeLocalInput(item.startsAt),
                             status: item.status,
                           })}
                           type="button"
