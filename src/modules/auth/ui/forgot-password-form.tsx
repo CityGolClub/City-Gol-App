@@ -8,7 +8,7 @@ type ForgotPasswordFormProps = {
   redirect?: string;
 };
 
-export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
+export function ForgotPasswordForm({redirect}: ForgotPasswordFormProps) {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +68,9 @@ export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
       <button className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         {submitting ? "Enviando..." : "Enviar mail de recuperacion"}
       </button>
+      <a className="mt-2 text-center font-semibold text-sm/6 text-400"href={"/login"}>
+            Volver
+          </a>
       </form>
   );
 }

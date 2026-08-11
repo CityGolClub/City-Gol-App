@@ -5,9 +5,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { redirect } = await searchParams;
   const registerHref = redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : "/register";
   const forgotPasswordHref = redirect ? `/forgot-password?redirect=${encodeURIComponent(redirect)}` : "/forgot-password";
-
   return (
-      <main className="w-full h-full px-[8vw] font-Citigol scroll-auto
+      <main className="w-full h-full px-[8vw] scroll-auto
       py-[6vw] bg-cover bg-center flex flex-col items-center
       bg-[linear-gradient(rgba(46,82,80,0.8),rgba(23,124,119,0.8))]">
         <img className="h-30 w-23"src={LogoCitygol.src} alt="Citygol Logo" />
@@ -15,6 +14,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <LoginForm redirect={redirect} registerHref={registerHref} forgotPasswordHref={forgotPasswordHref}/>
         </div>
+
       </section>
     </main>
   );

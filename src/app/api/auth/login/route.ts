@@ -12,10 +12,10 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) {
     return jsonError("Los datos ingresados no son validos", 400);
   }
-
+  
   const { email, password } = parsed.data;
   const result = await loginWithPassword(email, password);
-
+ 
   if (!result.success) {
     return jsonError(result.message, result.status);
   }
