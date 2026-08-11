@@ -65,7 +65,7 @@ export function ForgotPasswordForm({redirect}: ForgotPasswordFormProps) {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
 
-      <button className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+      <button type="submit" disabled={submitting} className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         {submitting ? "Enviando..." : "Enviar mail de recuperacion"}
       </button>
       <a className="mt-2 text-center font-semibold text-sm/6 text-400"href={"/login"}>

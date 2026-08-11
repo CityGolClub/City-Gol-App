@@ -17,6 +17,9 @@ export const registerSchema = z.object({
   password: z.string().min(8),
   repeatPassword: z.string().min(8),
   redirect: redirectField,
+}).refine((data) => data.password === data.repeatPassword, {
+  message: "Las contrasenas no coinciden",
+  path: ["repeatPassword"],
 });
 
 export const forgotPasswordSchema = z.object({
