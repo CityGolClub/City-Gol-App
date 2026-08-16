@@ -66,6 +66,8 @@ export async function listAdminBookings(filters: {
       fieldName: fields.name,
       teamId: bookings.teamId,
       teamName: teams.name,
+      clientName: bookings.clientName,
+      clientPhone: bookings.clientPhone,
       startsAt: bookings.startsAt,
       endsAt: bookings.endsAt,
       validFrom: bookings.validFrom,

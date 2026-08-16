@@ -23,6 +23,7 @@ export function LogoutButton({ className = "" }: { className?: string }) {
 
   return (
     <button className={className} disabled={submitting} onClick={handleLogout} type="button">
+      <span aria-hidden="true">↪</span>
       {submitting ? "Cerrando..." : "Cerrar sesión"}
     </button>
   );

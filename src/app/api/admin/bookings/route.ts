@@ -11,6 +11,8 @@ import { z } from "zod";
 const bookingCreateSchema = z.object({
   fieldId: z.string().trim().min(1),
   teamId: z.string().trim().optional().or(z.literal("")),
+  clientName: z.string().trim().optional().or(z.literal("")),
+  clientPhone: z.string().trim().optional().or(z.literal("")),
   startsAt: z.string().trim().min(1),
 });
 
@@ -34,7 +36,11 @@ export async function GET(request: Request) {
   });
 
   const db = getDb();
-  const fieldOptions = await db.select({ id: fields.id, name: fields.name }).from(fields).where(eq(fields.isActive, true)).orderBy(asc(fields.displayOrder), asc(fields.name));
+  const fieldOptions = await db
+    .select({ id: fields.id, name: fields.name, fieldType: fields.fieldType })
+    .from(fields)
+    .where(eq(fields.isActive, true))
+    .orderBy(asc(fields.displayOrder), asc(fields.name));
   const teamOptions = await db.select({ id: teams.id, name: teams.name }).from(teams).where(eq(teams.isActive, true)).orderBy(asc(teams.name));
   const settings = await getLatestSystemSettings();
 
@@ -76,6 +82,8 @@ export async function POST(request: Request) {
     .values({
       fieldId: parsed.data.fieldId,
       teamId: parsed.data.teamId || null,
+      clientName: parsed.data.clientName?.trim() || null,
+      clientPhone: parsed.data.clientPhone?.trim() || null,
       startsAt,
       endsAt,
       validFrom,

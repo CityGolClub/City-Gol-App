@@ -11,6 +11,8 @@ import { z } from "zod";
 const bookingUpdateSchema = z.object({
   fieldId: z.string().trim().min(1),
   teamId: z.string().trim().optional().or(z.literal("")),
+  clientName: z.string().trim().optional().or(z.literal("")),
+  clientPhone: z.string().trim().optional().or(z.literal("")),
   startsAt: z.string().trim().min(1),
   status: z.enum(["scheduled", "cancelled", "closed"]),
 });
@@ -43,6 +45,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     .set({
       fieldId: parsed.data.fieldId,
       teamId: parsed.data.teamId || null,
+      clientName: parsed.data.clientName?.trim() || null,
+      clientPhone: parsed.data.clientPhone?.trim() || null,
       startsAt,
       endsAt,
       validFrom,

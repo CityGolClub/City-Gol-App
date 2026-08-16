@@ -102,6 +102,8 @@ export const bookings = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     fieldId: uuid("field_id").notNull().references(() => fields.id),
     teamId: uuid("team_id").references(() => teams.id),
+    clientName: text("client_name"),
+    clientPhone: text("client_phone"),
     startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
     endsAt: timestamp("ends_at", { withTimezone: true }).notNull(),
     validFrom: timestamp("valid_from", { withTimezone: true }).notNull(),
