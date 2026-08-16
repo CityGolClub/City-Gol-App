@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 import { LogoutButton } from "@/components/logout-button";
 
 const items = [
   { href: "/admin/bookings", label: "Turnos", icon: "◫" },
-  { href: "/admin/bookings/new", label: "Nuevo turno", icon: "+" },
   { href: "/admin/teams", label: "Equipos", icon: "◎" },
   { href: "/admin/users", label: "Usuarios", icon: "◌" },
   { href: "/admin/fields", label: "Canchas", icon: "▣" },
@@ -18,6 +18,40 @@ const items = [
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const elements = [sidebarRef.current, contentRef.current].filter(Boolean) as HTMLElement[];
+    const cleanups = elements.map((element) => {
+      let timeoutId: number | null = null;
+
+      const handleScroll = () => {
+        element.classList.add("is-scrolling");
+
+        if (timeoutId) {
+          window.clearTimeout(timeoutId);
+        }
+
+        timeoutId = window.setTimeout(() => {
+          element.classList.remove("is-scrolling");
+        }, 700);
+      };
+
+      element.addEventListener("scroll", handleScroll, { passive: true });
+
+      return () => {
+        element.removeEventListener("scroll", handleScroll);
+        if (timeoutId) {
+          window.clearTimeout(timeoutId);
+        }
+      };
+    });
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+    };
+  }, []);
 
   function isActive(itemHref: string) {
     if (itemHref === "/admin/bookings") {
@@ -32,9 +66,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7ff] text-slate-900">
-      <div className="mx-auto grid min-h-screen max-w-[1500px] lg:grid-cols-[260px_1fr]">
-        <aside className="flex flex-col border-b border-slate-200 bg-[#eef3ff] p-5 lg:min-h-screen lg:border-b-0 lg:border-r lg:p-6">
+    <main className="h-screen overflow-hidden bg-[#f4f7ff] text-slate-900">
+      <div className="mx-auto grid h-screen max-w-[1500px] lg:grid-cols-[260px_1fr]">
+        <aside ref={sidebarRef} className="smart-scroll flex min-h-0 flex-col overflow-y-auto border-b border-slate-200 bg-[#eef3ff] p-5 lg:h-screen lg:border-b-0 lg:border-r lg:p-6">
           <div>
             <p className="text-3xl font-bold text-cyan-700">City Gol</p>
             <p className="mt-1 text-sm text-slate-500">Panel Admin</p>
@@ -60,21 +94,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <div className="mt-auto pt-10">
             <div className="border-t border-slate-200 pt-6">
               <Link
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0c7d69] px-4 py-3 text-center text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
                 href="/admin/bookings/new"
               >
-                <span className="text-base">＋</span>
-                Nuevo turno
+                <span className="text-base text-white">＋</span>
+                <span className="text-white">Nuevo turno</span>
               </Link>
 
               <div className="mt-4">
-                <LogoutButton className="inline-flex items-center gap-2 text-sm font-semibold text-red-600 transition hover:text-red-700" />
+                <LogoutButton className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-red-200 px-4 py-3 text-center text-sm font-semibold text-red-600 transition hover:bg-white hover:text-red-700" />
               </div>
             </div>
           </div>
         </aside>
 
-        <section className="p-4 sm:p-6 lg:p-8">{children}</section>
+        <section ref={contentRef} className="smart-scroll min-h-0 overflow-y-auto p-4 sm:p-6 lg:h-screen lg:p-8">{children}</section>
       </div>
     </main>
   );

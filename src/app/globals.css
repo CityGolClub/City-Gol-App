@@ -27,3 +27,31 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.smart-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.smart-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.smart-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.smart-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+  transition: background-color 220ms ease, opacity 220ms ease;
+}
+
+.smart-scroll.is-scrolling {
+  scrollbar-color: rgba(203, 213, 225, 0.95) transparent;
+}
+
+.smart-scroll.is-scrolling::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.95);
+}
