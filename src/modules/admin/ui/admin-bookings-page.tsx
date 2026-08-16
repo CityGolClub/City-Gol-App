@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
-import { formatArgentinaDateTimeLocalInput } from "@/lib/datetime";
+import { formatArgentinaDateTime, formatArgentinaDateTimeLocalInput } from "@/lib/datetime";
 
 type BookingItem = {
   id: string;
@@ -37,16 +37,6 @@ const emptyBooking: BookingFormState = {
   startsAt: "",
   status: "scheduled",
 };
-
-function formatDateTime(value: string) {
-  return new Intl.DateTimeFormat("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(value));
-}
 
 export function AdminBookingsPage() {
   const [items, setItems] = useState<BookingItem[]>([]);
@@ -155,7 +145,7 @@ export function AdminBookingsPage() {
                 {items.map((item) => (
                   <tr className="border-b border-slate-100" key={item.id}>
                     <td className="px-4 py-4 font-semibold text-slate-900">{item.fieldName}</td>
-                    <td className="px-4 py-4 text-slate-700">{formatDateTime(item.startsAt)} - {formatDateTime(item.endsAt)}</td>
+                    <td className="px-4 py-4 text-slate-700">{formatArgentinaDateTime(item.startsAt)} - {formatArgentinaDateTime(item.endsAt)}</td>
                     <td className="px-4 py-4 text-slate-700">{item.teamName ?? "Sin asignar"}</td>
                     <td className="px-4 py-4 text-slate-700">{item.status}</td>
                     <td className="px-4 py-4 text-slate-700">{item.checkinLimitSnapshot}</td>

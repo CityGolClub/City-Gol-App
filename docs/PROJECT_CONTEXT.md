@@ -162,15 +162,11 @@ QR rules:
 
 ### Screen 2: QR Panel
 
-- shows all bookings currently visible for that field
-- each visible booking shows:
-  - time range
-  - QR
-  - used / limit
-  - status
+- shows a dedicated main block for the current booking
+- shows a dedicated block for the previous booking when it is still visible because of grace time
+- shows a dedicated block for the next booking when it is already visible because of grace time
+- if there is no current booking, the main block must display: `No hay turno agendado para este horario`
 - includes a `Volver` action to return to the field selector
-
-The backend returns all visible bookings for the current moment; the frontend decides the layout.
 
 ## Check-In Rules
 

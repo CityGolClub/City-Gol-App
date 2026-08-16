@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { LoginForm } from "@/modules/auth/ui/login-form";
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
+import { formatArgentinaTimeRange } from "@/lib/datetime";
 
 type CheckinFlowProps = {
   token: string;
@@ -69,15 +70,7 @@ type ConfirmPayload = {
 };
 
 function formatRange(start: string, end: string) {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const formatter = new Intl.DateTimeFormat("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  return `${formatter.format(startDate)} - ${formatter.format(endDate)}`;
+  return formatArgentinaTimeRange(start, end);
 }
 
 export function CheckinFlow({ token }: CheckinFlowProps) {

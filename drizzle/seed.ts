@@ -17,9 +17,6 @@ const ids = {
   fieldTwo: "55555555-5555-5555-5555-555555555555",
   settings: "66666666-6666-6666-6666-666666666666",
   teamOne: "77777777-7777-7777-7777-777777777777",
-  bookingPrev: "88888888-8888-8888-8888-888888888888",
-  bookingCurrent: "99999999-9999-9999-9999-999999999999",
-  bookingNext: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
 } as const;
 
 const seedAccounts = [
@@ -64,32 +61,6 @@ const seedAccounts = [
   },
 ];
 
-function addHours(date: Date, hours: number) {
-  return new Date(date.getTime() + hours * 60 * 60 * 1000);
-}
-
-function addMinutes(date: Date, minutes: number) {
-  return new Date(date.getTime() + minutes * 60 * 1000);
-}
-
-function startOfDay(date: Date) {
-  const value = new Date(date);
-  value.setHours(0, 0, 0, 0);
-  return value;
-}
-
-function endOfDay(date: Date) {
-  const value = new Date(date);
-  value.setHours(23, 59, 59, 999);
-  return value;
-}
-
-function addDays(date: Date, days: number) {
-  const value = new Date(date);
-  value.setDate(value.getDate() + days);
-  return value;
-}
-
 async function deleteExistingAuthUsers(emails: string[]) {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
@@ -132,14 +103,6 @@ async function createAuthUsers() {
 async function main() {
   const db = getDb();
   const authIdsByEmail = await createAuthUsers();
-  const currentStart = new Date();
-  currentStart.setHours(20, 0, 0, 0);
-
-  const currentEnd = addHours(currentStart, 1);
-  const prevStart = addHours(currentStart, -1);
-  const prevEnd = currentStart;
-  const nextStart = currentEnd;
-  const nextEnd = addHours(nextStart, 1);
 
   await db.execute(sql`
     TRUNCATE TABLE
@@ -213,41 +176,6 @@ async function main() {
     updatedByUserId: ids.admin,
   });
 
-  await db.insert(bookings).values([
-    {
-      id: ids.bookingPrev,
-      fieldId: ids.fieldOne,
-      startsAt: prevStart,
-      endsAt: prevEnd,
-      validFrom: addMinutes(prevStart, -30),
-      validUntil: addMinutes(prevEnd, 30),
-      qrToken: "prev123",
-      checkinLimitSnapshot: 10,
-    },
-    {
-      id: ids.bookingCurrent,
-      fieldId: ids.fieldOne,
-      teamId: ids.teamOne,
-      startsAt: currentStart,
-      endsAt: currentEnd,
-      // Keep one stable demo QR visible for an extended period while frontend is being built.
-      validFrom: startOfDay(addDays(currentStart, -30)),
-      validUntil: endOfDay(addDays(currentStart, 30)),
-      qrToken: "cur123",
-      checkinLimitSnapshot: 10,
-    },
-    {
-      id: ids.bookingNext,
-      fieldId: ids.fieldOne,
-      startsAt: nextStart,
-      endsAt: nextEnd,
-      validFrom: addMinutes(nextStart, -30),
-      validUntil: addMinutes(nextEnd, 30),
-      qrToken: "next123",
-      checkinLimitSnapshot: 10,
-    },
-  ]);
-
   const [juan] = await db.select().from(users).where(eq(users.id, ids.userJuan)).limit(1);
 
   if (!juan) {
@@ -262,7 +190,7 @@ async function main() {
           email: account.email,
           password: account.password,
         })),
-        qrTokens: ["prev123", "cur123", "next123"],
+        qrTokens: [],
       },
       null,
       2,
