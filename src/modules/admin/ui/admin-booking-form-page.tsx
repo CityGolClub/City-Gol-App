@@ -278,7 +278,7 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
 
   if (loading) {
     return (
-      <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
+      <section className="rounded-[26px] bg-white p-5 shadow-sm lg:p-6">
         <p className="text-sm text-slate-600">Cargando formulario...</p>
       </section>
     );
@@ -286,54 +286,54 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
 
   if (error) {
     return (
-      <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
+      <section className="rounded-[26px] bg-white p-5 shadow-sm lg:p-6">
         <p className="text-sm text-red-600">{error}</p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
+    <section className="rounded-[26px] bg-white p-5 shadow-sm lg:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">{bookingId ? "Editar turno" : "Nuevo turno"}</h1>
-          <p className="mt-3 text-base text-slate-600">Complete los detalles para registrar una nueva reserva de cancha.</p>
+          <h1 className="text-3xl font-bold lg:text-[2rem]">{bookingId ? "Editar turno" : "Nuevo turno"}</h1>
+          <p className="mt-2 text-sm text-slate-600">Complete los detalles para registrar una nueva reserva de cancha.</p>
         </div>
 
-        <Link className="rounded-2xl border border-slate-200 px-4 py-2 text-sm" href="/admin/bookings">
+        <Link className="rounded-xl border border-slate-200 px-3.5 py-2 text-sm" href="/admin/bookings">
           Cerrar
         </Link>
       </div>
 
-      <form className="mt-8 grid gap-8" onSubmit={handleSubmit}>
-        <section className="rounded-[28px] bg-[#fbfdff] p-6 shadow-sm sm:p-8">
-          <h3 className="text-3xl font-bold text-[#0c7d69]">Datos del Cliente</h3>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <form className="mt-6 grid gap-6" onSubmit={handleSubmit}>
+        <section className="rounded-[24px] bg-[#fbfdff] p-5 shadow-sm sm:p-6">
+          <h3 className="text-2xl font-bold text-[#0c7d69]">Datos del Cliente</h3>
+          <div className="mt-5 grid gap-3.5 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Nombre o equipo</label>
-              <button className="rounded-2xl border border-slate-200 px-4 py-3 text-left text-base text-slate-900" onClick={() => setSearchOpen(true)} type="button">
+              <label className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Nombre o equipo</label>
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-left text-sm text-slate-900" onClick={() => setSearchOpen(true)} type="button">
                 {selected.clientName || "Ej. Los Pibes FC"}
               </button>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Teléfono</label>
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Ej. 11 1234 5678" value={selected.clientPhone} onChange={(event) => setSelected({ ...selected, clientPhone: event.target.value })} />
+              <label className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Teléfono</label>
+              <input className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" placeholder="Ej. 11 1234 5678" value={selected.clientPhone} onChange={(event) => setSelected({ ...selected, clientPhone: event.target.value })} />
             </div>
           </div>
         </section>
 
-        <section className="rounded-[28px] bg-[#fbfdff] p-6 shadow-sm sm:p-8">
-          <h3 className="text-3xl font-bold text-[#0c7d69]">Fecha y Hora</h3>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <section className="rounded-[24px] bg-[#fbfdff] p-5 shadow-sm sm:p-6">
+          <h3 className="text-2xl font-bold text-[#0c7d69]">Fecha y Hora</h3>
+          <div className="mt-5 grid gap-3.5 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Fecha</label>
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" type="date" value={selected.date} onChange={(event) => setSelected({ ...selected, date: event.target.value })} />
+              <label className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Fecha</label>
+              <input className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" type="date" value={selected.date} onChange={(event) => setSelected({ ...selected, date: event.target.value })} />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Horario</label>
-              <select className="rounded-2xl border border-slate-200 px-4 py-3" value={selected.time} onChange={(event) => setSelected({ ...selected, time: event.target.value })}>
+              <label className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Horario</label>
+              <select className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" value={selected.time} onChange={(event) => setSelected({ ...selected, time: event.target.value })}>
                 <option value="">Seleccionar horario...</option>
                 {timeOptions.map((time) => (
                   <option key={time} value={time}>{time}</option>
@@ -343,24 +343,24 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
           </div>
         </section>
 
-        <section className="rounded-[28px] bg-[#fbfdff] p-6 shadow-sm sm:p-8">
-          <h3 className="text-3xl font-bold text-[#0c7d69]">Selección de Cancha</h3>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="rounded-[24px] bg-[#fbfdff] p-5 shadow-sm sm:p-6">
+          <h3 className="text-2xl font-bold text-[#0c7d69]">Selección de Cancha</h3>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {fields.map((field) => {
               const availability = getFieldAvailability(field.id);
               const selectedField = selected.fieldId === field.id;
 
               return (
                 <button
-                  className={`rounded-2xl border p-4 text-left transition ${availability.occupied ? "border-slate-200 bg-slate-100 text-slate-400" : selectedField ? "border-[#0c7d69] bg-white text-slate-900 shadow-sm" : "border-slate-200 bg-white text-slate-900"}`}
+                  className={`rounded-xl border p-3.5 text-left transition ${availability.occupied ? "border-slate-200 bg-slate-100 text-slate-400" : selectedField ? "border-[#0c7d69] bg-white text-slate-900 shadow-sm" : "border-slate-200 bg-white text-slate-900"}`}
                   disabled={availability.occupied}
                   key={field.id}
                   onClick={() => setSelected({ ...selected, fieldId: field.id })}
                   type="button"
                 >
-                  <p className="text-xl font-bold">{field.name}</p>
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{getFieldTypeLabel(field.fieldType)}</p>
-                  <p className={`mt-3 text-xs font-bold uppercase tracking-[0.18em] ${availability.occupied ? "text-rose-400" : "text-emerald-600"}`}>
+                  <p className="text-lg font-bold">{field.name}</p>
+                  <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{getFieldTypeLabel(field.fieldType)}</p>
+                  <p className={`mt-2.5 text-[11px] font-bold uppercase tracking-[0.16em] ${availability.occupied ? "text-rose-400" : "text-emerald-600"}`}>
                     {availability.occupied ? "Ocupada" : "Disponible"}
                   </p>
                 </button>
@@ -370,9 +370,9 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
         </section>
 
         {bookingId ? (
-          <section className="rounded-[28px] bg-[#fbfdff] p-6 shadow-sm sm:p-8">
-            <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Estado</label>
-            <select className="mt-3 w-full rounded-2xl border border-slate-200 px-4 py-3" value={selected.status} onChange={(event) => setSelected({ ...selected, status: event.target.value as BookingFormState["status"] })}>
+          <section className="rounded-[24px] bg-[#fbfdff] p-5 shadow-sm sm:p-6">
+            <label className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Estado</label>
+            <select className="mt-2.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" value={selected.status} onChange={(event) => setSelected({ ...selected, status: event.target.value as BookingFormState["status"] })}>
               <option value="scheduled">{getBookingStatusLabel("scheduled")}</option>
               <option value="closed">{getBookingStatusLabel("closed")}</option>
               <option value="cancelled">{getBookingStatusLabel("cancelled")}</option>
@@ -382,36 +382,36 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
 
         {message ? <p className="text-sm text-slate-600">{message}</p> : null}
 
-        <button className="rounded-2xl bg-[#0c7d69] px-4 py-4 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
+        <button className="rounded-xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
           {saving ? "Guardando..." : bookingId ? "Guardar cambios" : "Guardar turno"}
         </button>
       </form>
 
       {searchOpen ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[26px] bg-white p-5 shadow-2xl lg:p-6">
             <div className="flex items-start justify-between gap-4">
-              <h2 className="text-2xl font-bold">Buscar nombre o equipo</h2>
-              <button className="rounded-2xl border border-slate-200 px-4 py-2 text-sm" onClick={() => setSearchOpen(false)} type="button">
+              <h2 className="text-xl font-bold">Buscar nombre o equipo</h2>
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2 text-sm" onClick={() => setSearchOpen(false)} type="button">
                 Cerrar
               </button>
             </div>
 
-            <input className="mt-6 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="Escribe el nombre del cliente o equipo" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} />
+            <input className="mt-5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" placeholder="Escribe el nombre del cliente o equipo" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} />
 
             {searchQuery.trim() ? (
-              <button className="mt-4 rounded-2xl border border-cyan-300 px-4 py-3 text-sm font-semibold text-cyan-700" onClick={handleUseCustomName} type="button">
+              <button className="mt-3 rounded-xl border border-cyan-300 px-3.5 py-2.5 text-sm font-semibold text-cyan-700" onClick={handleUseCustomName} type="button">
                 Usar &quot;{searchQuery.trim()}&quot; como nombre del cliente
               </button>
             ) : null}
 
-            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
               <section>
-                <h3 className="text-lg font-bold">Equipos</h3>
-                <div className="mt-3 space-y-2">
+                <h3 className="text-base font-bold">Equipos</h3>
+                <div className="mt-2.5 space-y-2">
                   {searchResults.teams.length > 0 ? (
                     searchResults.teams.map((team) => (
-                      <button className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-left text-sm" key={team.id} onClick={() => handleSelectTeam(team)} type="button">
+                      <button className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-left text-sm" key={team.id} onClick={() => handleSelectTeam(team)} type="button">
                         {team.name}
                       </button>
                     ))
@@ -422,11 +422,11 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
               </section>
 
               <section>
-                <h3 className="text-lg font-bold">Jugadores</h3>
-                <div className="mt-3 space-y-2">
+                <h3 className="text-base font-bold">Jugadores</h3>
+                <div className="mt-2.5 space-y-2">
                   {searchResults.users.length > 0 ? (
                     searchResults.users.map((user) => (
-                      <button className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-left text-sm" key={user.id} onClick={() => handleSelectUser(user)} type="button">
+                      <button className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-left text-sm" key={user.id} onClick={() => handleSelectUser(user)} type="button">
                         <span className="block font-semibold text-slate-900">{user.firstName} {user.lastName}</span>
                         <span className="mt-1 block text-slate-500">{user.phone}</span>
                       </button>

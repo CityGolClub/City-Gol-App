@@ -308,35 +308,35 @@ export function AdminBookingsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[30px] bg-white p-6 shadow-sm lg:p-8">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <div className="space-y-4">
+      <section className="rounded-[26px] bg-white p-4 shadow-sm lg:p-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-slate-950">Turnos</h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">Visualiza la ocupacion diaria de las canchas y administra las reservas desde un mismo panel.</p>
+            <h1 className="text-[1.7rem] font-bold tracking-tight text-slate-950 lg:text-[1.85rem]">Turnos</h1>
+            <p className="mt-2 max-w-2xl text-[13px] leading-5 text-slate-600">Visualiza la ocupacion diaria de las canchas y administra las reservas desde un mismo panel.</p>
           </div>
 
-          <Link className="inline-flex items-center gap-2 self-start rounded-full bg-[#0c6d5b] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_25px_rgba(12,109,91,0.18)] transition hover:bg-[#0a5d4e]" href="/admin/bookings/new">
-            <span className="text-lg leading-none">＋</span>
+          <Link className="inline-flex items-center gap-2 self-start rounded-full bg-[#0c6d5b] px-4.5 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_18px_rgba(12,109,91,0.15)] transition hover:bg-[#0a5d4e]" href="/admin/bookings/new">
+            <span className="text-sm leading-none">＋</span>
             Nuevo turno
           </Link>
         </div>
       </section>
 
-      <section className="rounded-[30px] bg-white p-5 shadow-sm sm:p-6 lg:p-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <section className="rounded-[26px] bg-white p-4 shadow-sm sm:p-5 lg:p-5.5">
+        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-500">Cronograma diario - {todayHeading}</p>
-            <p className="mt-2 text-sm text-slate-500">Cada bloque representa {slotMinutes} minutos segun la duracion configurada del turno. Cancelados no bloquean disponibilidad.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-500">Cronograma diario - {todayHeading}</p>
+            <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">Cada bloque representa {slotMinutes} minutos segun la duracion configurada del turno. Cancelados no bloquean disponibilidad.</p>
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-500 sm:text-sm">
             <span className="inline-flex items-center gap-2">
-              <span className="h-3 w-8 rounded-md bg-[#0c6d5b]" />
+              <span className="h-2.5 w-7 rounded-sm bg-[#0c6d5b]" />
               Ocupado
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="h-3 w-8 rounded-md border border-slate-300 bg-white" />
+              <span className="h-2.5 w-7 rounded-sm border border-slate-300 bg-white" />
               Libre
             </span>
           </div>
@@ -346,12 +346,12 @@ export function AdminBookingsPage() {
         {error ? <p className="mt-8 text-sm text-red-600">{error}</p> : null}
 
         {!loading && !error ? (
-          <div className="mt-8 overflow-x-auto pb-2">
-            <div className="min-w-[980px] rounded-[26px] border border-slate-100 bg-[#fbfcff] p-4 sm:p-5">
-              <div className="grid gap-x-2 gap-y-3" style={{ gridTemplateColumns: `160px repeat(${slots.length}, minmax(28px, 1fr))` }}>
+          <div className="mt-6 overflow-x-auto pb-1">
+            <div className="min-w-[920px] rounded-[24px] border border-slate-100 bg-[#fbfcff] p-3.5 sm:p-4">
+              <div className="grid gap-x-1.5 gap-y-2.5" style={{ gridTemplateColumns: `144px repeat(${slots.length}, minmax(24px, 1fr))` }}>
                 <div />
                 {slots.map((slot) => (
-                  <div className="text-center text-[11px] font-semibold tracking-[0.08em] text-slate-500" key={slot}>
+                  <div className="text-center text-[10px] font-semibold tracking-[0.05em] text-slate-500" key={slot}>
                     {getSlotLabel(slot)}
                   </div>
                 ))}
@@ -361,10 +361,10 @@ export function AdminBookingsPage() {
 
                   return (
                     <div className="contents" key={field.id}>
-                      <div className="flex items-center py-1 pr-3" key={`${field.id}-label`}>
+                      <div className="flex items-center py-0.5 pr-2" key={`${field.id}-label`}>
                         <div>
-                          <p className="text-sm font-semibold text-slate-900">{field.name}</p>
-                          <p className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-400">{getFieldTypeLabel(field.fieldType)}</p>
+                          <p className="text-[13px] font-semibold text-slate-900">{field.name}</p>
+                          <p className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-400">{getFieldTypeLabel(field.fieldType)}</p>
                         </div>
                       </div>
 
@@ -373,7 +373,7 @@ export function AdminBookingsPage() {
 
                         return (
                           <div
-                            className={`h-8 rounded-md border transition ${isOccupied ? "border-[#0c6d5b] bg-[#0c6d5b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" : "border-slate-200 bg-white"}`}
+                            className={`h-7 rounded-[9px] border transition ${isOccupied ? "border-[#0c6d5b] bg-[#0c6d5b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" : "border-slate-200 bg-white"}`}
                             key={`${field.id}-${slot}`}
                           />
                         );
@@ -390,22 +390,22 @@ export function AdminBookingsPage() {
         ) : null}
       </section>
 
-      <section className="rounded-[30px] bg-white p-5 shadow-sm sm:p-6 lg:p-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[26px] bg-white p-3.5 shadow-sm sm:p-4 lg:p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-500">Reservas</p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">Agenda general</h2>
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">Reservas</p>
+            <h2 className="mt-1 text-lg font-bold tracking-tight text-slate-950 sm:text-[1.35rem]">Agenda general</h2>
           </div>
 
-          <p className="text-sm text-slate-500">Reservas reales del sistema ordenadas por fecha.</p>
+          <p className="text-[11px] text-slate-500 sm:text-xs">Reservas reales del sistema ordenadas por fecha.</p>
         </div>
 
         {loading ? <p className="mt-8 text-sm text-slate-600">Cargando turnos...</p> : null}
         {error ? <p className="mt-8 text-sm text-red-600">{error}</p> : null}
 
         {!loading && !error ? (
-          <div className="mt-8 overflow-hidden rounded-[26px] border border-slate-100 bg-[#fcfdff]">
-            <div className="hidden grid-cols-[2.2fr_1.8fr_1.1fr_1.2fr_1fr_70px] gap-4 border-b border-slate-100 bg-[#f6f8fc] px-5 py-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-500 lg:grid">
+          <div className="mt-5 overflow-hidden rounded-[22px] border border-slate-100 bg-[#fcfdff]">
+            <div className="hidden grid-cols-[2.2fr_1.8fr_1.1fr_1.2fr_1fr_56px] gap-3 border-b border-slate-100 bg-[#f6f8fc] px-3.5 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 lg:grid">
               <p>Jugador / equipo</p>
               <p>Cancha</p>
               <p>Fecha</p>
@@ -424,31 +424,31 @@ export function AdminBookingsPage() {
 
                   return (
                     <div className="border-b border-slate-100 last:border-b-0" key={item.id}>
-                      <div className="grid gap-5 px-5 py-5 lg:grid-cols-[2.2fr_1.8fr_1.1fr_1.2fr_1fr_70px] lg:items-center">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#edf3ef] text-sm font-bold uppercase text-[#285d52]">{getInitials(primaryLabel)}</div>
+                      <div className="grid gap-3 px-3.5 py-3 lg:grid-cols-[2.2fr_1.8fr_1.1fr_1.2fr_1fr_56px] lg:items-center">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#edf3ef] text-[11px] font-bold uppercase text-[#285d52]">{getInitials(primaryLabel)}</div>
                           <div>
-                            <p className="text-base font-semibold leading-5 text-slate-950">{primaryLabel}</p>
-                            <p className="mt-1 text-sm text-slate-500">{secondaryLabel}</p>
+                            <p className="text-[13px] font-semibold leading-4 text-slate-950">{primaryLabel}</p>
+                            <p className="mt-0.5 text-[11px] text-slate-500">{secondaryLabel}</p>
                           </div>
                         </div>
 
                         <div>
-                          <p className="text-base font-medium text-slate-900">{item.fieldName}</p>
-                          <p className="mt-1 text-sm text-slate-500">{fieldTypeLabel}</p>
+                          <p className="text-[13px] font-medium text-slate-900">{item.fieldName}</p>
+                          <p className="mt-0.5 text-[11px] text-slate-500">{fieldTypeLabel}</p>
                         </div>
 
                         <div>
-                          <p className="text-base font-medium text-slate-900">{formatDateLabel(item.startsAt)}</p>
+                          <p className="text-[13px] font-medium text-slate-900">{formatDateLabel(item.startsAt)}</p>
                         </div>
 
                         <div>
-                          <p className="text-base font-semibold text-slate-900">{formatArgentinaTimeRange(item.startsAt, item.endsAt)}</p>
-                          <p className="mt-1 text-sm text-slate-500">Inicio {formatTimeLabel(item.startsAt)}</p>
+                          <p className="text-[13px] font-semibold text-slate-900">{formatArgentinaTimeRange(item.startsAt, item.endsAt)}</p>
+                          <p className="mt-0.5 text-[11px] text-slate-500">Inicio {formatTimeLabel(item.startsAt)}</p>
                         </div>
 
                         <div>
-                          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] ${getBookingStatusClasses(item.status)}`}>
+                          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] ${getBookingStatusClasses(item.status)}`}>
                             {getBookingStatusLabel(item.status)}
                           </span>
                         </div>
@@ -456,7 +456,7 @@ export function AdminBookingsPage() {
                         <div className="relative flex justify-end" ref={openMenuId === item.id ? actionsMenuRef : null}>
                           <button
                             aria-label={`Abrir acciones para ${primaryLabel}`}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-500 transition hover:border-slate-300 hover:bg-white hover:text-slate-800"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-sm text-slate-500 transition hover:border-slate-300 hover:bg-white hover:text-slate-800"
                             onClick={(event) => {
                               event.stopPropagation();
                               setOpenMenuId((current) => current === item.id ? null : item.id);
@@ -467,12 +467,12 @@ export function AdminBookingsPage() {
                           </button>
 
                           {openMenuId === item.id ? (
-                            <div className="absolute right-0 top-12 z-10 min-w-40 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_18px_35px_rgba(15,23,42,0.12)]">
-                              <Link className="block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50" href={`/admin/bookings/${item.id}/edit`}>
+                            <div className="absolute right-0 top-10 z-10 min-w-40 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-[0_18px_35px_rgba(15,23,42,0.12)]">
+                              <Link className="block rounded-xl px-3 py-2 text-[13px] font-medium text-slate-700 transition hover:bg-slate-50" href={`/admin/bookings/${item.id}/edit`}>
                                 Editar turno
                               </Link>
                               <button
-                                className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-amber-700 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="block w-full rounded-xl px-3 py-2 text-left text-[13px] font-medium text-amber-700 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50"
                                 disabled={item.status === "cancelled"}
                                 onClick={() => void handleCancel(item)}
                                 type="button"
@@ -480,7 +480,7 @@ export function AdminBookingsPage() {
                                 Cancelar turno
                               </button>
                               <button
-                                className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                                className="block w-full rounded-xl px-3 py-2 text-left text-[13px] font-medium text-red-600 transition hover:bg-red-50"
                                 onClick={() => void handleDelete(item.id)}
                                 type="button"
                               >
@@ -501,14 +501,14 @@ export function AdminBookingsPage() {
         ) : null}
 
         {!loading && !error && items.length > 0 ? (
-          <div className="mt-6 flex flex-col gap-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-4 flex flex-col gap-3 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:text-xs">
             <p>
               Mostrando {(currentPage - 1) * PAGE_SIZE + 1} a {Math.min(currentPage * PAGE_SIZE, items.length)} de {items.length} reservas
             </p>
 
             <div className="flex items-center gap-2 self-start sm:self-auto">
               <button
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:border-slate-300 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-slate-300 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-45"
                 disabled={currentPage === 1}
                 onClick={() => setPage((value) => Math.max(1, value - 1))}
                 type="button"
@@ -518,7 +518,7 @@ export function AdminBookingsPage() {
 
               {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
                 <button
-                  className={`inline-flex h-10 min-w-10 items-center justify-center rounded-xl px-3 text-sm font-semibold transition ${pageNumber === currentPage ? "bg-[#0c6d5b] text-white shadow-[0_10px_20px_rgba(12,109,91,0.18)]" : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300"}`}
+                  className={`inline-flex h-8 min-w-8 items-center justify-center rounded-lg px-2.5 text-xs font-semibold transition ${pageNumber === currentPage ? "bg-[#0c6d5b] text-white shadow-[0_8px_16px_rgba(12,109,91,0.16)]" : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300"}`}
                   key={pageNumber}
                   onClick={() => setPage(pageNumber)}
                   type="button"
@@ -528,7 +528,7 @@ export function AdminBookingsPage() {
               ))}
 
               <button
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:border-slate-300 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-slate-300 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-45"
                 disabled={currentPage === totalPages}
                 onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
                 type="button"
