@@ -69,16 +69,16 @@ export function AdminTeamsPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
-        <h1 className="text-4xl font-bold">Equipos</h1>
-        <p className="mt-3 max-w-2xl text-base text-slate-600">Listado simple de equipos activos y su owner.</p>
+    <div className="space-y-4">
+      <section className="rounded-[26px] bg-white p-4 shadow-sm lg:p-5">
+        <h1 className="text-[1.7rem] font-bold tracking-tight text-slate-950 lg:text-[1.85rem]">Equipos</h1>
+        <p className="mt-2 max-w-2xl text-[13px] leading-5 text-slate-600">Listado simple de equipos activos y su owner.</p>
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
-        <div className="mb-5">
+      <section className="rounded-[26px] bg-white p-4 shadow-sm lg:p-5">
+        <div className="mb-4">
           <input
-            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm sm:max-w-sm"
+            className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm sm:max-w-sm"
             placeholder="Buscar por equipo u owner"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -91,19 +91,19 @@ export function AdminTeamsPage() {
         {!loading && !error ? (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
-              <thead className="bg-[#f2f5ff] text-xs uppercase tracking-[0.18em] text-slate-500">
+              <thead className="bg-[#f2f5ff] text-[10px] uppercase tracking-[0.14em] text-slate-500">
                 <tr>
-                  <th className="rounded-l-2xl px-4 py-4">Equipo</th>
-                  <th className="px-4 py-4">Owner</th>
-                  <th className="rounded-r-2xl px-4 py-4">Miembros</th>
+                  <th className="rounded-l-xl px-3.5 py-3">Equipo</th>
+                  <th className="px-3.5 py-3">Owner</th>
+                  <th className="rounded-r-xl px-3.5 py-3">Miembros</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredItems.map((item) => (
                   <tr className="border-b border-slate-100" key={item.id}>
-                    <td className="px-4 py-4 font-semibold text-slate-900">{item.name}</td>
-                    <td className="px-4 py-4 text-slate-700">{item.owner.fullName}</td>
-                    <td className="px-4 py-4 text-slate-700">{item.memberCount}</td>
+                    <td className="px-3.5 py-3 font-semibold text-slate-900">{item.name}</td>
+                    <td className="px-3.5 py-3 text-slate-700">{item.owner.fullName}</td>
+                    <td className="px-3.5 py-3 text-slate-700">{item.memberCount}</td>
                   </tr>
                 ))}
               </tbody>

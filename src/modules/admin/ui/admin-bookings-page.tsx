@@ -203,6 +203,7 @@ export function AdminBookingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedScheduleBooking, setSelectedScheduleBooking] = useState<BookingItem | null>(null);
   const actionsMenuRef = useRef<HTMLDivElement | null>(null);
 
   const loadBookings = useMemo(
@@ -280,6 +281,7 @@ export function AdminBookingsPage() {
     }
 
     setOpenMenuId(null);
+    setSelectedScheduleBooking(null);
     await loadBookings();
   }
 
@@ -304,6 +306,7 @@ export function AdminBookingsPage() {
     }
 
     setOpenMenuId(null);
+    setSelectedScheduleBooking(null);
     await loadBookings();
   }
 
@@ -317,8 +320,8 @@ export function AdminBookingsPage() {
           </div>
 
           <Link className="inline-flex items-center gap-2 self-start rounded-full bg-[#0c6d5b] px-4.5 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_18px_rgba(12,109,91,0.15)] transition hover:bg-[#0a5d4e]" href="/admin/bookings/new">
-            <span className="text-sm leading-none">＋</span>
-            Nuevo turno
+            <span className="text-sm leading-none text-white">＋</span>
+            <span className="text-white">Nuevo turno</span>
           </Link>
         </div>
       </section>
@@ -369,12 +372,21 @@ export function AdminBookingsPage() {
                       </div>
 
                       {slots.map((slot) => {
-                        const isOccupied = rowItems.some((item) => isOccupiedSlot(item, slot, slot + slotMinutes));
+                        const slotBooking = rowItems.find((item) => isOccupiedSlot(item, slot, slot + slotMinutes)) ?? null;
+                        const isOccupied = Boolean(slotBooking);
 
                         return (
-                          <div
-                            className={`h-7 rounded-[9px] border transition ${isOccupied ? "border-[#0c6d5b] bg-[#0c6d5b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" : "border-slate-200 bg-white"}`}
+                          <button
+                            aria-label={slotBooking ? `Ver turno de ${getPrimaryLabel(slotBooking)} en ${field.name}` : `Horario libre en ${field.name}`}
+                            className={`h-7 rounded-[9px] border transition ${isOccupied ? "cursor-pointer border-[#0c6d5b] bg-[#0c6d5b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:brightness-95" : "cursor-default border-slate-200 bg-white"}`}
+                            disabled={!slotBooking}
                             key={`${field.id}-${slot}`}
+                            onClick={() => {
+                              if (slotBooking) {
+                                setSelectedScheduleBooking(slotBooking);
+                              }
+                            }}
+                            type="button"
                           />
                         );
                       })}
@@ -539,6 +551,68 @@ export function AdminBookingsPage() {
           </div>
         ) : null}
       </section>
+
+      {selectedScheduleBooking ? (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/45 p-4">
+          <div className="w-full max-w-xl rounded-[26px] bg-white p-5 shadow-2xl lg:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Detalle del turno</p>
+                <h3 className="mt-1 text-xl font-bold text-slate-950">{getPrimaryLabel(selectedScheduleBooking)}</h3>
+                <p className="mt-1 text-sm text-slate-500">{getSecondaryLabel(selectedScheduleBooking)}</p>
+              </div>
+
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2 text-sm" onClick={() => setSelectedScheduleBooking(null)} type="button">
+                Cerrar
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[18px] bg-[#f8fafc] p-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Cancha</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">{selectedScheduleBooking.fieldName}</p>
+                <p className="mt-1 text-xs text-slate-500">{getFieldTypeLabel(fields.find((entry) => entry.id === selectedScheduleBooking.fieldId)?.fieldType)}</p>
+              </div>
+
+              <div className="rounded-[18px] bg-[#f8fafc] p-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Estado</p>
+                <div className="mt-2">
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${getBookingStatusClasses(selectedScheduleBooking.status)}`}>
+                    {getBookingStatusLabel(selectedScheduleBooking.status)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-[18px] bg-[#f8fafc] p-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Fecha</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">{formatDateLabel(selectedScheduleBooking.startsAt)}</p>
+              </div>
+
+              <div className="rounded-[18px] bg-[#f8fafc] p-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Horario</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">{formatArgentinaTimeRange(selectedScheduleBooking.startsAt, selectedScheduleBooking.endsAt)}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-2.5 sm:grid-cols-3">
+              <Link className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" href={`/admin/bookings/${selectedScheduleBooking.id}/edit`}>
+                Editar turno
+              </Link>
+              <button
+                className="rounded-xl border border-amber-200 px-4 py-3 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={selectedScheduleBooking.status === "cancelled"}
+                onClick={() => void handleCancel(selectedScheduleBooking)}
+                type="button"
+              >
+                Cancelar turno
+              </button>
+              <button className="rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50" onClick={() => void handleDelete(selectedScheduleBooking.id)} type="button">
+                Eliminar registro
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

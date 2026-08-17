@@ -109,22 +109,22 @@ export function AdminRedemptionsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="flex flex-col gap-4 rounded-3xl bg-white p-6 shadow-sm lg:flex-row lg:items-center lg:justify-between lg:p-8">
+    <div className="space-y-4">
+      <section className="flex flex-col gap-3 rounded-[26px] bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between lg:p-5">
         <div>
-          <h1 className="text-4xl font-bold">Canjes</h1>
-          <p className="mt-3 text-base text-slate-600">Registra y consulta canjes de score vigente.</p>
+          <h1 className="text-[1.7rem] font-bold tracking-tight text-slate-950 lg:text-[1.85rem]">Canjes</h1>
+          <p className="mt-2 text-[13px] leading-5 text-slate-600">Registra y consulta canjes de score vigente.</p>
         </div>
 
-        <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white" onClick={() => setOpen(true)} type="button">
+        <button className="rounded-xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white" onClick={() => setOpen(true)} type="button">
           Registrar canje
         </button>
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
-        <div className="mb-5">
+      <section className="rounded-[26px] bg-white p-4 shadow-sm lg:p-5">
+        <div className="mb-4">
           <input
-            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm sm:max-w-sm"
+            className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm sm:max-w-sm"
             placeholder="Buscar por jugador o descripción"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -137,21 +137,21 @@ export function AdminRedemptionsPage() {
         {!loading && !error ? (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
-              <thead className="bg-[#f2f5ff] text-xs uppercase tracking-[0.18em] text-slate-500">
+              <thead className="bg-[#f2f5ff] text-[10px] uppercase tracking-[0.14em] text-slate-500">
                 <tr>
-                  <th className="rounded-l-2xl px-4 py-4">Jugador</th>
-                  <th className="px-4 py-4">Puntos</th>
-                  <th className="px-4 py-4">Descripción</th>
-                  <th className="rounded-r-2xl px-4 py-4">Fecha</th>
+                  <th className="rounded-l-xl px-3.5 py-3">Jugador</th>
+                  <th className="px-3.5 py-3">Puntos</th>
+                  <th className="px-3.5 py-3">Descripción</th>
+                  <th className="rounded-r-xl px-3.5 py-3">Fecha</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredItems.map((item) => (
                   <tr className="border-b border-slate-100" key={item.id}>
-                    <td className="px-4 py-4 font-semibold text-slate-900">{item.userName}</td>
-                    <td className="px-4 py-4 text-slate-700">{item.pointsSpent}</td>
-                    <td className="px-4 py-4 text-slate-700">{item.description}</td>
-                    <td className="px-4 py-4 text-slate-700">{new Date(item.createdAt).toLocaleString("es-AR")}</td>
+                    <td className="px-3.5 py-3 font-semibold text-slate-900">{item.userName}</td>
+                    <td className="px-3.5 py-3 text-slate-700">{item.pointsSpent}</td>
+                    <td className="px-3.5 py-3 text-slate-700">{item.description}</td>
+                    <td className="px-3.5 py-3 text-slate-700">{new Date(item.createdAt).toLocaleString("es-AR")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -162,25 +162,25 @@ export function AdminRedemptionsPage() {
 
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[26px] bg-white p-5 shadow-2xl lg:p-6">
             <div className="flex items-start justify-between gap-4">
-              <h2 className="text-2xl font-bold">Registrar canje</h2>
-              <button className="rounded-2xl border border-slate-200 px-4 py-2 text-sm" onClick={() => setOpen(false)} type="button">
+              <h2 className="text-xl font-bold">Registrar canje</h2>
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2 text-sm" onClick={() => setOpen(false)} type="button">
                 Cerrar
               </button>
             </div>
 
             <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
-              <button className="rounded-2xl border border-slate-200 px-4 py-3 text-left" onClick={() => setPlayerPickerOpen(true)} type="button">
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-left text-sm" onClick={() => setPlayerPickerOpen(true)} type="button">
                 {selectedUser ? `${selectedUser.label} - Vigente: ${selectedUser.scoreVigente}` : "Seleccionar jugador"}
               </button>
 
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" type="number" min={1} value={form.pointsSpent} onChange={(event) => setForm((current) => ({ ...current, pointsSpent: Number(event.target.value) }))} placeholder="Puntos" />
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" />
+              <input className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" type="number" min={1} value={form.pointsSpent} onChange={(event) => setForm((current) => ({ ...current, pointsSpent: Number(event.target.value) }))} placeholder="Puntos" />
+              <input className="rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" />
 
               {message ? <p className="text-sm text-slate-600">{message}</p> : null}
 
-              <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
+              <button className="rounded-xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
                 {saving ? "Registrando..." : "Registrar canje"}
               </button>
             </form>
@@ -190,25 +190,25 @@ export function AdminRedemptionsPage() {
 
       {playerPickerOpen ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[26px] bg-white p-5 shadow-2xl lg:p-6">
             <div className="flex items-start justify-between gap-4">
-              <h2 className="text-2xl font-bold">Seleccionar jugador</h2>
-              <button className="rounded-2xl border border-slate-200 px-4 py-2 text-sm" onClick={() => setPlayerPickerOpen(false)} type="button">
+              <h2 className="text-xl font-bold">Seleccionar jugador</h2>
+              <button className="rounded-xl border border-slate-200 px-3.5 py-2 text-sm" onClick={() => setPlayerPickerOpen(false)} type="button">
                 Cerrar
               </button>
             </div>
 
             <input
-              className="mt-6 w-full rounded-2xl border border-slate-200 px-4 py-3"
+              className="mt-5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm"
               placeholder="Buscar jugador"
               value={userSearch}
               onChange={(event) => setUserSearch(event.target.value)}
             />
 
-            <div className="mt-6 space-y-2">
+            <div className="mt-5 space-y-2">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
-                  <button className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-left text-sm" key={user.id} onClick={() => handleSelectUser(user)} type="button">
+                  <button className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-left text-sm" key={user.id} onClick={() => handleSelectUser(user)} type="button">
                     <span className="block font-semibold text-slate-900">{user.label}</span>
                     <span className="mt-1 block text-slate-500">Score vigente: {user.scoreVigente}</span>
                   </button>
