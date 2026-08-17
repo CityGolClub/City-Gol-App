@@ -25,6 +25,7 @@ export function AdminRedemptionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [playerPickerOpen, setPlayerPickerOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ userId: "", pointsSpent: 1, description: "" });
@@ -73,6 +74,14 @@ export function AdminRedemptionsPage() {
     return user.label.toLowerCase().includes(normalized);
   });
 
+  const selectedUser = users.find((user) => user.id === form.userId) ?? null;
+
+  function handleSelectUser(user: UserOption) {
+    setForm((current) => ({ ...current, userId: user.id }));
+    setPlayerPickerOpen(false);
+    setUserSearch("");
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
@@ -94,6 +103,7 @@ export function AdminRedemptionsPage() {
     setMessage("Canje registrado");
     setSaving(false);
     setOpen(false);
+    setPlayerPickerOpen(false);
     setForm({ userId: "", pointsSpent: 1, description: "" });
     await loadRedemptions();
   }
@@ -161,21 +171,9 @@ export function AdminRedemptionsPage() {
             </div>
 
             <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
-              <input
-                className="rounded-2xl border border-slate-200 px-4 py-3"
-                placeholder="Buscar persona"
-                value={userSearch}
-                onChange={(event) => setUserSearch(event.target.value)}
-              />
-
-              <select className="rounded-2xl border border-slate-200 px-4 py-3" value={form.userId} onChange={(event) => setForm((current) => ({ ...current, userId: event.target.value }))}>
-                <option value="">Selecciona un jugador</option>
-                {filteredUsers.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.label} - Vigente: {user.scoreVigente}
-                  </option>
-                ))}
-              </select>
+              <button className="rounded-2xl border border-slate-200 px-4 py-3 text-left" onClick={() => setPlayerPickerOpen(true)} type="button">
+                {selectedUser ? `${selectedUser.label} - Vigente: ${selectedUser.scoreVigente}` : "Seleccionar jugador"}
+              </button>
 
               <input className="rounded-2xl border border-slate-200 px-4 py-3" type="number" min={1} value={form.pointsSpent} onChange={(event) => setForm((current) => ({ ...current, pointsSpent: Number(event.target.value) }))} placeholder="Puntos" />
               <input className="rounded-2xl border border-slate-200 px-4 py-3" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" />
@@ -186,6 +184,39 @@ export function AdminRedemptionsPage() {
                 {saving ? "Registrando..." : "Registrar canje"}
               </button>
             </form>
+          </div>
+        </div>
+      ) : null}
+
+      {playerPickerOpen ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="text-2xl font-bold">Seleccionar jugador</h2>
+              <button className="rounded-2xl border border-slate-200 px-4 py-2 text-sm" onClick={() => setPlayerPickerOpen(false)} type="button">
+                Cerrar
+              </button>
+            </div>
+
+            <input
+              className="mt-6 w-full rounded-2xl border border-slate-200 px-4 py-3"
+              placeholder="Buscar jugador"
+              value={userSearch}
+              onChange={(event) => setUserSearch(event.target.value)}
+            />
+
+            <div className="mt-6 space-y-2">
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <button className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-left text-sm" key={user.id} onClick={() => handleSelectUser(user)} type="button">
+                    <span className="block font-semibold text-slate-900">{user.label}</span>
+                    <span className="mt-1 block text-slate-500">Score vigente: {user.scoreVigente}</span>
+                  </button>
+                ))
+              ) : (
+                <p className="text-sm text-slate-500">Sin resultados</p>
+              )}
+            </div>
           </div>
         </div>
       ) : null}
