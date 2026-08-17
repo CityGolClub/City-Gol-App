@@ -19,6 +19,7 @@ export function AdminTeamsPage() {
   const [items, setItems] = useState<TeamItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -61,6 +62,12 @@ export function AdminTeamsPage() {
     };
   }, []);
 
+  const filteredItems = items.filter((item) => {
+    const normalized = search.trim().toLowerCase();
+    if (!normalized) return true;
+    return item.name.toLowerCase().includes(normalized) || item.owner.fullName.toLowerCase().includes(normalized);
+  });
+
   return (
     <div className="space-y-6">
       <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
@@ -69,6 +76,15 @@ export function AdminTeamsPage() {
       </section>
 
       <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
+        <div className="mb-5">
+          <input
+            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm sm:max-w-sm"
+            placeholder="Buscar por equipo u owner"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+
         {loading ? <p className="text-sm text-slate-600">Cargando equipos...</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
@@ -83,7 +99,7 @@ export function AdminTeamsPage() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((item) => (
+                {filteredItems.map((item) => (
                   <tr className="border-b border-slate-100" key={item.id}>
                     <td className="px-4 py-4 font-semibold text-slate-900">{item.name}</td>
                     <td className="px-4 py-4 text-slate-700">{item.owner.fullName}</td>

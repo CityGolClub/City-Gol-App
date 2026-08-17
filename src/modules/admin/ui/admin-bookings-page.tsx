@@ -23,6 +23,12 @@ type BookingItem = {
   createdAt: string;
 };
 
+function getBookingStatusLabel(status: BookingItem["status"]) {
+  if (status === "scheduled") return "Agendado";
+  if (status === "closed") return "Cerrado";
+  return "Cancelado";
+}
+
 function formatDateTime(value: string) {
   return new Intl.DateTimeFormat("es-AR", {
     day: "2-digit",
@@ -34,9 +40,11 @@ function formatDateTime(value: string) {
 }
 
 export function AdminBookingsPage() {
+  const PAGE_SIZE = 10;
   const [items, setItems] = useState<BookingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   const loadBookings = useMemo(
     () => async () => {
@@ -54,6 +62,7 @@ export function AdminBookingsPage() {
         }
 
         setItems(Array.isArray(payload?.items) ? payload.items : []);
+        setPage(1);
       } catch {
         setError("No pudimos cargar los turnos");
         setItems([]);
@@ -68,8 +77,19 @@ export function AdminBookingsPage() {
     void loadBookings();
   }, [loadBookings]);
 
+  const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedItems = items.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
   async function handleDelete(id: string) {
-    await fetch(`/api/admin/bookings/${id}`, { method: "DELETE" });
+    const response = await fetch(`/api/admin/bookings/${id}`, { method: "DELETE" });
+    const payload = await readJsonResponse(response);
+
+    if (!response.ok) {
+      setError(getErrorMessage(payload, "No pudimos eliminar el turno"));
+      return;
+    }
+
     await loadBookings();
   }
 
@@ -102,31 +122,70 @@ export function AdminBookingsPage() {
                 <th className="px-4 py-4">Estado</th>
                 <th className="rounded-r-2xl px-4 py-4">Acciones</th>
               </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr className="border-b border-slate-100" key={item.id}>
+              </thead>
+              <tbody>
+                {paginatedItems.map((item) => (
+                  <tr className="border-b border-slate-100" key={item.id}>
                   <td className="px-4 py-4 font-semibold text-slate-900">{item.fieldName}</td>
                   <td className="px-4 py-4 text-slate-700">{formatDateTime(item.startsAt)} - {formatDateTime(item.endsAt)}</td>
                   <td className="px-4 py-4 text-slate-700">{item.clientName ?? item.teamName ?? "Sin asignar"}</td>
                   <td className="px-4 py-4 text-slate-700">{item.clientPhone ?? "-"}</td>
-                  <td className="px-4 py-4 text-slate-700">{item.status}</td>
+                  <td className="px-4 py-4 text-slate-700">{getBookingStatusLabel(item.status)}</td>
                   <td className="px-4 py-4">
                     <div className="flex gap-2">
                       <Link className="rounded-xl border border-slate-200 px-3 py-2 text-sm" href={`/admin/bookings/${item.id}/edit`}>
                         Editar
                       </Link>
                       <button className="rounded-xl border border-red-200 px-3 py-2 text-sm text-red-600" onClick={() => void handleDelete(item.id)} type="button">
-                        Cancelar
+                        Eliminar
                       </button>
                     </div>
                   </td>
                 </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
+
+        {!loading && !error && items.length > 0 ? (
+          <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              Mostrando {(currentPage - 1) * PAGE_SIZE + 1} a {Math.min(currentPage * PAGE_SIZE, items.length)} de {items.length} turnos
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                className="rounded-xl border border-slate-200 px-3 py-2 disabled:opacity-50"
+                disabled={currentPage === 1}
+                onClick={() => setPage((value) => Math.max(1, value - 1))}
+                type="button"
+              >
+                ←
+              </button>
+
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                <button
+                  className={`rounded-xl px-3 py-2 ${pageNumber === currentPage ? "bg-[#0c7d69] font-semibold text-white" : "border border-slate-200 text-slate-700"}`}
+                  key={pageNumber}
+                  onClick={() => setPage(pageNumber)}
+                  type="button"
+                >
+                  {pageNumber}
+                </button>
               ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
-    </section>
-  );
+
+              <button
+                className="rounded-xl border border-slate-200 px-3 py-2 disabled:opacity-50"
+                disabled={currentPage === totalPages}
+                onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
+                type="button"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </section>
+    );
 }

@@ -25,6 +25,12 @@ type BookingItem = {
   createdAt: string;
 };
 
+function getBookingStatusLabel(status: BookingItem["status"] | BookingFormState["status"]) {
+  if (status === "scheduled") return "Agendado";
+  if (status === "closed") return "Cerrado";
+  return "Cancelado";
+}
+
 type FieldOption = {
   id: string;
   name: string;
@@ -367,16 +373,16 @@ export function AdminBookingFormPage({ bookingId }: { bookingId?: string }) {
           <section className="rounded-[28px] bg-[#fbfdff] p-6 shadow-sm sm:p-8">
             <label className="text-sm font-bold uppercase tracking-[0.18em] text-slate-600">Estado</label>
             <select className="mt-3 w-full rounded-2xl border border-slate-200 px-4 py-3" value={selected.status} onChange={(event) => setSelected({ ...selected, status: event.target.value as BookingFormState["status"] })}>
-              <option value="scheduled">scheduled</option>
-              <option value="closed">closed</option>
-              <option value="cancelled">cancelled</option>
+              <option value="scheduled">{getBookingStatusLabel("scheduled")}</option>
+              <option value="closed">{getBookingStatusLabel("closed")}</option>
+              <option value="cancelled">{getBookingStatusLabel("cancelled")}</option>
             </select>
           </section>
         ) : null}
 
         {message ? <p className="text-sm text-slate-600">{message}</p> : null}
 
-        <button className="rounded-2xl bg-cyan-700 px-4 py-4 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
+        <button className="rounded-2xl bg-[#0c7d69] px-4 py-4 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
           {saving ? "Guardando..." : bookingId ? "Guardar cambios" : "Guardar turno"}
         </button>
       </form>

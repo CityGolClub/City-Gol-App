@@ -1,11 +1,11 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 
 import { requireAdminApiSession } from "@/lib/auth/admin";
 import { buildBookingWindow, findBookingOverlap, getFieldLimitSnapshot, getLatestSystemSettings } from "@/lib/admin/bookings";
 import { getDb } from "@/lib/db/client";
 import { parseArgentinaDateTimeLocal } from "@/lib/datetime";
 import { jsonError, jsonOk } from "@/lib/utils/http";
-import { bookings } from "@drizzle/schema";
+import { bookings, checkins } from "@drizzle/schema";
 import { z } from "zod";
 
 const bookingUpdateSchema = z.object({
@@ -68,8 +68,15 @@ export async function DELETE(_: Request, context: { params: Promise<{ id: string
 
   const { id } = await context.params;
   const db = getDb();
-  const [updated] = await db.update(bookings).set({ status: "cancelled", updatedAt: new Date() }).where(eq(bookings.id, id)).returning({ id: bookings.id });
 
-  if (!updated) return jsonError("No encontramos el turno", 404);
+  const [checkinCount] = await db.select({ value: count() }).from(checkins).where(eq(checkins.bookingId, id));
+
+  if ((checkinCount?.value ?? 0) > 0) {
+    return jsonError("No se puede eliminar un turno que ya tiene check-ins registrados", 409);
+  }
+
+  const [deleted] = await db.delete(bookings).where(eq(bookings.id, id)).returning({ id: bookings.id });
+
+  if (!deleted) return jsonError("No encontramos el turno", 404);
   return jsonOk({ success: true });
 }

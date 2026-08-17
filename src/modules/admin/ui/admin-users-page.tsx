@@ -165,7 +165,7 @@ export function AdminUsersPage() {
             onChange={(event) => setSearch(event.target.value)}
           />
 
-          <button className="rounded-2xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white" onClick={() => void loadUsers()} type="button">
+          <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white" onClick={() => void loadUsers()} type="button">
             Buscar
           </button>
         </div>
@@ -266,7 +266,7 @@ export function AdminUsersPage() {
 
               <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Equipo actual: {selectedTeamName}</div>
 
-              <button className="rounded-2xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
+              <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
                 {saving ? "Guardando..." : "Guardar cambios"}
               </button>
             </form>

@@ -94,7 +94,7 @@ export function AdminExportPage() {
 
           {message ? <p className="text-sm text-slate-600">{message}</p> : null}
 
-          <button className="rounded-2xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={loading} type="submit">
+          <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={loading} type="submit">
             {loading ? "Exportando..." : "Exportar registros"}
           </button>
         </form>

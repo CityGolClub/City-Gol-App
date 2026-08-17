@@ -199,8 +199,8 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
 
       {showCheckinButton ? (
         <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <button
-            className="w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
+                <button
+                  className="w-full rounded-2xl bg-[#0c7d69] px-4 py-3 font-semibold text-white disabled:opacity-60"
             disabled={submitting}
             onClick={handleCheckin}
             type="button"
@@ -213,7 +213,7 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
       {confirmation ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 px-4 py-6">
           <section className="w-full max-w-xl rounded-[32px] bg-white p-6 shadow-2xl sm:p-8">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-cyan-700 text-5xl text-white">✓</div>
+            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#0c7d69] text-5xl text-white">✓</div>
             <h2 className="mt-6 text-center text-3xl font-bold text-cyan-800">Check-in Exitoso!</h2>
             <p className="mx-auto mt-4 max-w-md text-center text-base leading-7 text-slate-700">
               Tu llegada para la reserva de <span className="font-semibold">{confirmation.booking.fieldName}</span> ha sido confirmada.
@@ -232,8 +232,8 @@ export function CheckinFlow({ token }: CheckinFlowProps) {
               </article>
             </div>
 
-            <button
-              className="mt-6 w-full rounded-2xl bg-cyan-700 px-4 py-3 font-semibold text-white"
+              <button
+                className="mt-6 w-full rounded-2xl bg-[#0c7d69] px-4 py-3 font-semibold text-white"
               onClick={() => router.push("/panel")}
               type="button"
             >

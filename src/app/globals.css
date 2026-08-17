@@ -28,6 +28,14 @@ a {
   text-decoration: none;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .smart-scroll {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;

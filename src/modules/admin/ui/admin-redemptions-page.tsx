@@ -28,6 +28,8 @@ export function AdminRedemptionsPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ userId: "", pointsSpent: 1, description: "" });
+  const [search, setSearch] = useState("");
+  const [userSearch, setUserSearch] = useState("");
 
   const loadRedemptions = useMemo(
     () => async () => {
@@ -58,6 +60,18 @@ export function AdminRedemptionsPage() {
   useEffect(() => {
     void loadRedemptions();
   }, [loadRedemptions]);
+
+  const filteredItems = items.filter((item) => {
+    const normalized = search.trim().toLowerCase();
+    if (!normalized) return true;
+    return item.userName.toLowerCase().includes(normalized) || item.description.toLowerCase().includes(normalized);
+  });
+
+  const filteredUsers = users.filter((user) => {
+    const normalized = userSearch.trim().toLowerCase();
+    if (!normalized) return true;
+    return user.label.toLowerCase().includes(normalized);
+  });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -92,12 +106,21 @@ export function AdminRedemptionsPage() {
           <p className="mt-3 text-base text-slate-600">Registra y consulta canjes de score vigente.</p>
         </div>
 
-        <button className="rounded-2xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white" onClick={() => setOpen(true)} type="button">
+        <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white" onClick={() => setOpen(true)} type="button">
           Registrar canje
         </button>
       </section>
 
       <section className="rounded-3xl bg-white p-6 shadow-sm lg:p-8">
+        <div className="mb-5">
+          <input
+            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm sm:max-w-sm"
+            placeholder="Buscar por jugador o descripción"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+
         {loading ? <p className="text-sm text-slate-600">Cargando canjes...</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
@@ -113,7 +136,7 @@ export function AdminRedemptionsPage() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((item) => (
+                {filteredItems.map((item) => (
                   <tr className="border-b border-slate-100" key={item.id}>
                     <td className="px-4 py-4 font-semibold text-slate-900">{item.userName}</td>
                     <td className="px-4 py-4 text-slate-700">{item.pointsSpent}</td>
@@ -138,9 +161,16 @@ export function AdminRedemptionsPage() {
             </div>
 
             <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
+              <input
+                className="rounded-2xl border border-slate-200 px-4 py-3"
+                placeholder="Buscar persona"
+                value={userSearch}
+                onChange={(event) => setUserSearch(event.target.value)}
+              />
+
               <select className="rounded-2xl border border-slate-200 px-4 py-3" value={form.userId} onChange={(event) => setForm((current) => ({ ...current, userId: event.target.value }))}>
                 <option value="">Selecciona un jugador</option>
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.label} - Vigente: {user.scoreVigente}
                   </option>
@@ -152,7 +182,7 @@ export function AdminRedemptionsPage() {
 
               {message ? <p className="text-sm text-slate-600">{message}</p> : null}
 
-              <button className="rounded-2xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
+              <button className="rounded-2xl bg-[#0c7d69] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60" disabled={saving} type="submit">
                 {saving ? "Registrando..." : "Registrar canje"}
               </button>
             </form>
