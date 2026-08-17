@@ -1,19 +1,28 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import { LogoutButton } from "@/components/logout-button";
+import logoCitygol from "@/imgs/Logo-Citygol.png";
+import canjesIcon from "@/imgs/canjes.png";
+import configuracionIcon from "@/imgs/configuracion.png";
+import equiposIcon from "@/imgs/equipos.png";
+import exportarIcon from "@/imgs/exportar.png";
+import canchasIcon from "@/imgs/canchas.png";
+import turnosIcon from "@/imgs/turnos.png";
+import usuariosIcon from "@/imgs/usuarios.png";
 
 const items = [
-  { href: "/admin/bookings", label: "Turnos", icon: "◫" },
-  { href: "/admin/teams", label: "Equipos", icon: "◎" },
-  { href: "/admin/users", label: "Usuarios", icon: "◌" },
-  { href: "/admin/fields", label: "Canchas", icon: "▣" },
-  { href: "/admin/settings", label: "Configuración", icon: "◍" },
-  { href: "/admin/redemptions", label: "Canjes", icon: "◈" },
-  { href: "/admin/export", label: "Exportación", icon: "⇩" },
+  { href: "/admin/bookings", label: "Turnos", icon: turnosIcon },
+  { href: "/admin/teams", label: "Equipos", icon: equiposIcon },
+  { href: "/admin/users", label: "Usuarios", icon: usuariosIcon },
+  { href: "/admin/fields", label: "Canchas", icon: canchasIcon },
+  { href: "/admin/settings", label: "Configuración", icon: configuracionIcon },
+  { href: "/admin/redemptions", label: "Canjes", icon: canjesIcon },
+  { href: "/admin/export", label: "Exportación", icon: exportarIcon },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -67,11 +76,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="h-screen overflow-hidden bg-[#f4f7ff] text-slate-900">
-      <div className="mx-auto grid h-screen max-w-[1500px] lg:grid-cols-[260px_1fr]">
+      <div className="grid h-screen lg:grid-cols-[260px_1fr]">
         <aside ref={sidebarRef} className="smart-scroll flex min-h-0 flex-col overflow-y-auto border-b border-slate-200 bg-[#eef3ff] p-5 lg:h-screen lg:border-b-0 lg:border-r lg:p-6">
-          <div>
-            <p className="text-3xl font-bold text-cyan-700">City Gol</p>
-            <p className="mt-1 text-sm text-slate-500">Panel Admin</p>
+          <div className="flex items-center gap-3">
+            <Image alt="Logo City Gol" className="h-15 w-15 rounded-xl object-contain" priority src={logoCitygol} />
+            <div>
+              <p className="text-[1.7rem] font-bold text-cyan-700">City Gol</p>
+              <p className="mt-1 text-sm text-slate-500">Panel Admin</p>
+            </div>
           </div>
 
           <nav className="mt-8 grid gap-2">
@@ -84,7 +96,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   key={item.href}
                 >
-                  <span className={`text-base ${active ? "text-cyan-700" : "text-slate-500"}`}>{item.icon}</span>
+                  <Image alt="" aria-hidden className={`h-5 w-5 shrink-0 object-contain ${active ? "opacity-100" : "opacity-70"}`} src={item.icon} />
                   {item.label}
                 </Link>
               );
