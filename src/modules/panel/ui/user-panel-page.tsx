@@ -58,6 +58,7 @@ export function UserPanelPage() {
   const [searchResults, setSearchResults] = useState<TeamSearchItem[]>([]);
   const [joinRequests, setJoinRequests] = useState<TeamJoinRequestItem[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
+  const [teamPopup, setTeamPopup] = useState<{ title: string; message: string } | null>(null);
 
   const loadTeamSearch = useCallback(
     async (query: string) => {
@@ -174,12 +175,24 @@ export function UserPanelPage() {
     const payload = await readJsonResponse(response);
 
     if (!response.ok) {
+      if (response.status === 409) {
+        setTeamPopup({
+          title: "Tenes otra solicitud pendiente",
+          message: getErrorMessage(payload, "Ya tenes una solicitud en curso"),
+        });
+        setActionLoading(false);
+        return;
+      }
+
       setMessage(getErrorMessage(payload, "No pudimos enviar la solicitud"));
       setActionLoading(false);
       return;
     }
 
-    setMessage("Solicitud enviada");
+    setTeamPopup({
+      title: "Solicitud enviada",
+      message: "Tu solicitud para unirte al equipo fue enviada correctamente.",
+    });
     setActionLoading(false);
   }
 
@@ -266,6 +279,8 @@ export function UserPanelPage() {
       onRejectRequest={(teamId, requestId) => void handleRequestDecision(teamId, requestId, "reject")}
       onSearchChange={setTeamSearch}
       searchResults={searchResults}
+      onCloseTeamPopup={() => setTeamPopup(null)}
+      teamPopup={teamPopup}
       teamName={teamName}
       teamSearch={teamSearch}
       user={user}

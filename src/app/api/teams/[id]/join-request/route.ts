@@ -28,7 +28,7 @@ export async function POST(_: Request, context: { params: Promise<{ id: string }
   if (activeMember) return jsonError("Ya perteneces a ese equipo", 409);
 
   const pending = await getPendingTeamJoinRequest(user.id, id);
-  if (pending) return jsonError("Ya tienes una solicitud pendiente para ese equipo", 409);
+  if (pending) return jsonError("Ya tenes una solicitud en curso", 409);
 
   const [created] = await db
     .insert(teamJoinRequests)

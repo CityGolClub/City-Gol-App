@@ -65,6 +65,8 @@ export function UserPanelView({
   teamSearch,
   onSearchChange,
   searchResults,
+  teamPopup,
+  onCloseTeamPopup,
   onJoinRequest,
   onLeaveTeam,
   onDeleteTeam,
@@ -81,6 +83,8 @@ export function UserPanelView({
   teamSearch: string;
   onSearchChange: (value: string) => void;
   searchResults: TeamSearchItem[];
+  teamPopup: { title: string; message: string } | null;
+  onCloseTeamPopup: () => void;
   onJoinRequest: (teamId: string) => void;
   onLeaveTeam: (teamId: string) => void;
   onDeleteTeam: (teamId: string) => void;
@@ -92,6 +96,19 @@ export function UserPanelView({
 }) {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-10">
+      {teamPopup ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 px-4 py-6">
+          <section className="w-full max-w-md rounded-[32px] bg-white p-6 shadow-2xl sm:p-8">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#0c7d69] text-4xl text-white">✓</div>
+            <h2 className="mt-6 text-center text-2xl font-bold text-[#0c7d69]">{teamPopup.title}</h2>
+            <p className="mt-4 text-center text-base leading-7 text-slate-700">{teamPopup.message}</p>
+            <button className="mt-6 w-full rounded-2xl bg-[#0c7d69] px-4 py-3 font-semibold text-white" onClick={onCloseTeamPopup} type="button">
+              Entendido
+            </button>
+          </section>
+        </div>
+      ) : null}
+
       <section className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -150,10 +167,6 @@ export function UserPanelView({
               <dd className="mt-1 text-base text-slate-900">{formatBirthDate(user.birthDate)}</dd>
             </div>
 
-            <div>
-              <dt className="text-sm font-medium text-slate-500">Rol</dt>
-              <dd className="mt-1 text-base capitalize text-slate-900">{user.role}</dd>
-            </div>
           </dl>
         </article>
 
