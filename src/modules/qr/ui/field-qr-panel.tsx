@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
+import bookingWaiting from "@/imgs/booking-waiting.png";
+import bookingWaitingCurrent from "@/imgs/booking-waiting-current.png";
+import bookingFullPrimary from "@/imgs/icono-booking-full-1.png";
+import bookingFullSecondary from "@/imgs/icono-booking-full-2.png";
 
 import { formatArgentinaTimeRange } from "@/lib/datetime";
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
@@ -45,6 +49,32 @@ function getStatusText(booking: VisibleBooking) {
   if (booking.isFull) return "Completo";
   if (!booking.isAvailable) return booking.message ?? "No disponible";
   return "Disponible";
+}
+
+function renderBookingVisual({
+  booking,
+  qrValue,
+  size,
+  emptyImage,
+  fullImage,
+  emptyAlt,
+}: {
+  booking: VisibleBooking | null;
+  qrValue?: string;
+  size: number;
+  emptyImage: { src: string };
+  fullImage: { src: string };
+  emptyAlt: string;
+}) {
+  if (!booking) {
+    return <img alt={emptyAlt} className="h-full w-full object-contain" src={emptyImage.src} />;
+  }
+
+  if (booking.isFull) {
+    return <img alt="Booking completo" className="h-full w-full object-contain" src={fullImage.src} />;
+  }
+
+  return <QRCode size={size} style={{ height: "auto", maxWidth: "100%", width: "100%" }} value={qrValue ?? ""} />;
 }
 
 function getBookingByKind(bookings: VisibleBooking[], kind: VisibleBooking["displayKind"]) {
@@ -163,7 +193,14 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
 
                   <div className="mt-10 w-full max-w-[220px] rounded-[26px] bg-white/80 p-4 shadow-sm">
                     <div className="rounded-[18px] bg-white p-3">
-                      <QRCode size={180} style={{ height: "auto", maxWidth: "100%", width: "100%" }} value={`${origin}/checkin/${previousBooking.qrToken}`} />
+                      {renderBookingVisual({
+                        booking: previousBooking,
+                        qrValue: `${origin}/checkin/${previousBooking.qrToken}`,
+                        size: 180,
+                        emptyImage: bookingWaiting,
+                        fullImage: bookingFullSecondary,
+                        emptyAlt: "Turno anterior sin QR visible",
+                      })}
                     </div>
                   </div>
 
@@ -175,8 +212,16 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                   </div>
                 </div>
               ) : (
-                <div className="flex h-full items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
-                  No hay turno anterior visible.
+                <div className="flex h-full flex-col items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
+                  <div className="mx-auto w-full max-w-[220px] p-2">
+                    {renderBookingVisual({
+                      booking: null,
+                      size: 180,
+                      emptyImage: bookingWaiting,
+                      fullImage: bookingFullSecondary,
+                      emptyAlt: "Sin turno anterior visible",
+                    })}
+                  </div>
                 </div>
               )}
             </article>
@@ -192,7 +237,14 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
 
                   <div className="mx-auto mt-10 max-w-[330px] rounded-[30px] bg-white p-5 shadow-[0_20px_45px_rgba(0,0,0,0.18)] sm:max-w-[360px] sm:p-6">
                     <div className="rounded-[22px] bg-white p-4">
-                      <QRCode size={280} style={{ height: "auto", maxWidth: "100%", width: "100%" }} value={`${origin}/checkin/${currentBooking.qrToken}`} />
+                      {renderBookingVisual({
+                        booking: currentBooking,
+                        qrValue: `${origin}/checkin/${currentBooking.qrToken}`,
+                        size: 280,
+                        emptyImage: bookingWaitingCurrent,
+                        fullImage: bookingFullPrimary,
+                        emptyAlt: "Sin turno vigente",
+                      })}
                     </div>
                   </div>
 
@@ -209,7 +261,15 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                     TURNO VIGENTE
                   </p>
                   <h2 className="mt-6 text-3xl font-bold sm:text-4xl">No hay turno agendado para este horario</h2>
-                  <p className="mt-5 text-lg font-medium text-white/95">Revisa los bloques laterales para ver si hay turnos dentro de la ventana de gracia.</p>
+                  <div className="mx-auto mt-10 max-w-[330px] p-2 sm:max-w-[360px]">
+                    {renderBookingVisual({
+                      booking: null,
+                      size: 280,
+                      emptyImage: bookingWaitingCurrent,
+                      fullImage: bookingFullPrimary,
+                      emptyAlt: "Sin turno vigente",
+                    })}
+                  </div>
                 </div>
               )}
             </article>
@@ -222,7 +282,14 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
 
                   <div className="mt-10 w-full max-w-[220px] rounded-[26px] bg-white/80 p-4 shadow-sm">
                     <div className="rounded-[18px] bg-white p-3">
-                      <QRCode size={180} style={{ height: "auto", maxWidth: "100%", width: "100%" }} value={`${origin}/checkin/${nextBooking.qrToken}`} />
+                      {renderBookingVisual({
+                        booking: nextBooking,
+                        qrValue: `${origin}/checkin/${nextBooking.qrToken}`,
+                        size: 180,
+                        emptyImage: bookingWaiting,
+                        fullImage: bookingFullSecondary,
+                        emptyAlt: "Turno siguiente sin QR visible",
+                      })}
                     </div>
                   </div>
 
@@ -234,8 +301,16 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                   </div>
                 </div>
               ) : (
-                <div className="flex h-full items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
-                  No hay turno siguiente visible.
+                <div className="flex h-full flex-col items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
+                  <div className="mx-auto w-full max-w-[220px] p-2">
+                    {renderBookingVisual({
+                      booking: null,
+                      size: 180,
+                      emptyImage: bookingWaiting,
+                      fullImage: bookingFullSecondary,
+                      emptyAlt: "Sin turno siguiente visible",
+                    })}
+                  </div>
                 </div>
               )}
             </article>
