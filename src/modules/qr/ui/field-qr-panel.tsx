@@ -156,9 +156,9 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
   const nextBooking = data ? getBookingByKind(data.visibleBookings, "next") : null;
 
   return (
-    <main className="min-h-screen bg-[#f6f8ff] px-4 py-6 text-slate-900 sm:px-6 lg:px-8 lg:py-8">
-      <div className="mx-auto max-w-[1400px]">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <main className="h-[100dvh] overflow-hidden bg-[#f6f8ff] px-4 py-4 text-slate-900 sm:px-5 sm:py-5 lg:px-6 lg:py-5">
+      <div className="mx-auto flex h-full max-w-[1600px] flex-col">
+        <header className="flex flex-none flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4 text-slate-900">
             <p className="text-2xl font-bold text-cyan-700">City Gol</p>
             <div className="hidden h-10 w-px bg-slate-300 sm:block" />
@@ -174,29 +174,29 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
           </Link>
         </header>
 
-        {loading ? <p className="mt-10 text-slate-600">Cargando QRs...</p> : null}
-        {error ? <p className="mt-10 text-red-600">{error}</p> : null}
+        {loading ? <p className="mt-4 text-slate-600">Cargando QRs...</p> : null}
+        {error ? <p className="mt-4 text-red-600">{error}</p> : null}
 
         {!loading && !error && !currentBooking && !previousBooking && !nextBooking ? (
-          <section className="mt-10 rounded-[28px] bg-white p-8 shadow-sm">
+          <section className="mt-4 rounded-[28px] bg-white p-8 shadow-sm">
             <p className="text-slate-600">No hay bookings visibles para esta cancha en este momento.</p>
           </section>
         ) : null}
 
         {currentBooking || previousBooking || nextBooking ? (
-          <section className="mt-10 grid gap-4 lg:grid-cols-[1fr_2.15fr_1fr] lg:items-stretch">
-            <article className="order-2 rounded-[28px] bg-[#dce9ff] px-6 py-8 text-slate-900 shadow-sm sm:px-8 lg:order-1">
+          <section className="mt-4 grid min-h-0 flex-1 gap-4 lg:grid-cols-[0.92fr_1.85fr_0.92fr] lg:items-stretch">
+            <article className="order-2 min-h-0 rounded-[28px] bg-[#dce9ff] px-4 py-5 text-slate-900 shadow-sm sm:px-5 sm:py-6 lg:order-1 lg:px-6">
               {previousBooking ? (
                 <div className="flex h-full flex-col items-center justify-center text-center">
                   <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-500">{getDisplayLabel(previousBooking.displayKind)}</p>
-                  <h3 className="mt-5 text-4xl font-bold">{formatRange(previousBooking.startsAt, previousBooking.endsAt)}</h3>
+                  <h3 className="mt-4 text-[clamp(2rem,2.8vw,3rem)] font-bold">{formatRange(previousBooking.startsAt, previousBooking.endsAt)}</h3>
 
-                  <div className="mt-10 w-full max-w-[220px] rounded-[26px] bg-white/80 p-4 shadow-sm">
-                    <div className="rounded-[18px] bg-white p-3">
+                  <div className="mt-6 w-full max-w-[175px] rounded-[24px] bg-white/80 p-3 shadow-sm lg:max-w-[190px]">
+                    <div className="rounded-[16px] bg-white p-2.5">
                       {renderBookingVisual({
                         booking: previousBooking,
                         qrValue: `${origin}/checkin/${previousBooking.qrToken}`,
-                        size: 180,
+                        size: 150,
                         emptyImage: bookingWaiting,
                         fullImage: bookingFullSecondary,
                         emptyAlt: "Turno anterior sin QR visible",
@@ -213,10 +213,10 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                 </div>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
-                  <div className="mx-auto w-full max-w-[220px] p-2">
+                  <div className="mx-auto w-full max-w-[175px] p-2 lg:max-w-[190px]">
                     {renderBookingVisual({
                       booking: null,
-                      size: 180,
+                      size: 150,
                       emptyImage: bookingWaiting,
                       fullImage: bookingFullSecondary,
                       emptyAlt: "Sin turno anterior visible",
@@ -226,21 +226,21 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
               )}
             </article>
 
-            <article className="order-1 rounded-[28px] bg-gradient-to-br from-[#20847d] to-[#1f8f8a] px-6 py-7 text-white shadow-[0_24px_50px_rgba(31,143,138,0.2)] sm:px-8 sm:py-10 lg:order-2">
+            <article className="order-1 min-h-0 rounded-[28px] bg-gradient-to-br from-[#20847d] to-[#1f8f8a] px-5 py-6 text-white shadow-[0_24px_50px_rgba(31,143,138,0.2)] sm:px-6 sm:py-7 lg:order-2 lg:px-8">
               {currentBooking ? (
                 <div className="mx-auto max-w-xl text-center">
                   <p className="mx-auto inline-flex rounded-full bg-white/14 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-white/90">
                     {getDisplayLabel(currentBooking.displayKind)}
                   </p>
-                  <h2 className="mt-6 text-5xl font-bold sm:text-6xl">{formatRange(currentBooking.startsAt, currentBooking.endsAt)}</h2>
-                  <p className="mt-5 text-lg font-medium text-white/95">Escanea con la camara de tu celular para confirmar tu llegada</p>
+                  <h2 className="mt-5 text-[clamp(3.2rem,6.2vw,5.4rem)] font-bold leading-none">{formatRange(currentBooking.startsAt, currentBooking.endsAt)}</h2>
+                  <p className="mt-4 text-[clamp(1rem,1.5vw,1.35rem)] font-medium text-white/95">Escanea con la camara de tu celular para confirmar tu llegada</p>
 
-                  <div className="mx-auto mt-10 max-w-[330px] rounded-[30px] bg-white p-5 shadow-[0_20px_45px_rgba(0,0,0,0.18)] sm:max-w-[360px] sm:p-6">
-                    <div className="rounded-[22px] bg-white p-4">
+                  <div className="mx-auto mt-6 max-w-[255px] rounded-[28px] bg-white p-4 shadow-[0_20px_45px_rgba(0,0,0,0.18)] sm:max-w-[290px] lg:max-w-[310px] lg:p-5">
+                    <div className="rounded-[20px] bg-white p-3">
                       {renderBookingVisual({
                         booking: currentBooking,
                         qrValue: `${origin}/checkin/${currentBooking.qrToken}`,
-                        size: 280,
+                        size: 245,
                         emptyImage: bookingWaitingCurrent,
                         fullImage: bookingFullPrimary,
                         emptyAlt: "Sin turno vigente",
@@ -260,11 +260,11 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                   <p className="mx-auto inline-flex rounded-full bg-white/14 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-white/90">
                     TURNO VIGENTE
                   </p>
-                  <h2 className="mt-6 text-3xl font-bold sm:text-4xl">No hay turno agendado para este horario</h2>
-                  <div className="mx-auto mt-10 max-w-[330px] p-2 sm:max-w-[360px]">
+                  <h2 className="mt-5 text-[clamp(2.2rem,4vw,3.4rem)] font-bold leading-tight">No hay turno agendado para este horario</h2>
+                  <div className="mx-auto mt-6 max-w-[255px] p-2 sm:max-w-[290px] lg:max-w-[310px]">
                     {renderBookingVisual({
                       booking: null,
-                      size: 280,
+                      size: 245,
                       emptyImage: bookingWaitingCurrent,
                       fullImage: bookingFullPrimary,
                       emptyAlt: "Sin turno vigente",
@@ -274,18 +274,18 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
               )}
             </article>
 
-            <article className="order-3 rounded-[28px] bg-[#dce9ff] px-6 py-8 text-slate-900 shadow-sm sm:px-8 lg:order-3">
+            <article className="order-3 min-h-0 rounded-[28px] bg-[#dce9ff] px-4 py-5 text-slate-900 shadow-sm sm:px-5 sm:py-6 lg:order-3 lg:px-6">
               {nextBooking ? (
                 <div className="flex h-full flex-col items-center justify-center text-center">
                   <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-500">{getDisplayLabel(nextBooking.displayKind)}</p>
-                  <h3 className="mt-5 text-4xl font-bold">{formatRange(nextBooking.startsAt, nextBooking.endsAt)}</h3>
+                  <h3 className="mt-4 text-[clamp(2rem,2.8vw,3rem)] font-bold">{formatRange(nextBooking.startsAt, nextBooking.endsAt)}</h3>
 
-                  <div className="mt-10 w-full max-w-[220px] rounded-[26px] bg-white/80 p-4 shadow-sm">
-                    <div className="rounded-[18px] bg-white p-3">
+                  <div className="mt-6 w-full max-w-[175px] rounded-[24px] bg-white/80 p-3 shadow-sm lg:max-w-[190px]">
+                    <div className="rounded-[16px] bg-white p-2.5">
                       {renderBookingVisual({
                         booking: nextBooking,
                         qrValue: `${origin}/checkin/${nextBooking.qrToken}`,
-                        size: 180,
+                        size: 150,
                         emptyImage: bookingWaiting,
                         fullImage: bookingFullSecondary,
                         emptyAlt: "Turno siguiente sin QR visible",
@@ -302,10 +302,10 @@ export function FieldQrPanel({ fieldId }: { fieldId: string }) {
                 </div>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center rounded-[22px] border border-white/60 bg-white/40 p-6 text-center text-slate-500">
-                  <div className="mx-auto w-full max-w-[220px] p-2">
+                  <div className="mx-auto w-full max-w-[175px] p-2 lg:max-w-[190px]">
                     {renderBookingVisual({
                       booking: null,
-                      size: 180,
+                      size: 150,
                       emptyImage: bookingWaiting,
                       fullImage: bookingFullSecondary,
                       emptyAlt: "Sin turno siguiente visible",
