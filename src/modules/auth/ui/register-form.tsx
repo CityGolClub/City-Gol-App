@@ -93,12 +93,12 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
             {field.type === "password" && (
               <button
                 type="button"
-                className="absolute right-3 top-1/2 flex h-3 w-5 -translate-y-1/2 cursor-pointer"
+                className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 <img
-                  className="h-3 w-5"
+                  className={showPassword ? "h-[19px] w-5 object-contain" : "h-5 w-5 object-contain"}
                   src={showPassword ? hidePass.src : showPass.src}
                   alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                 />
