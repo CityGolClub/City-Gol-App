@@ -45,15 +45,14 @@ export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
   }
 
   return (
-   
-      <form className="flex flex-col gap-2 scroll-auto" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium" htmlFor="forgot-email">
+        <label className="text-sm font-medium text-slate-500" htmlFor="forgot-email">
           Email
         </label>
         <input
           id="forgot-email"
-          className="block w-full border-2 border-gray-300 rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6"
+          className="block w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 outline-1 -outline-offset-1 outline-slate-200 placeholder:text-slate-400 focus:outline-2 focus:-outline-offset-2 focus:outline-cyan-700 sm:text-sm/6"
           type="email"
           placeholder="Ingresa tu email"
           value={email}
@@ -65,9 +64,13 @@ export function ForgotPasswordForm({ redirect }: ForgotPasswordFormProps) {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
 
-      <button type="submit" disabled={submitting} className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        {submitting ? "Enviando..." : "Enviar mail de recuperacion"}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="flex w-full justify-center rounded-2xl bg-cyan-700 px-3 py-2 text-sm/6 font-semibold text-white transition hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700"
+      >
+        {submitting ? "Enviando..." : "Enviar mail de recuperación"}
       </button>
-      </form>
+    </form>
   );
 }

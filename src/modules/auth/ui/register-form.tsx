@@ -2,8 +2,10 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { getErrorMessage, readJsonResponse } from "@/modules/auth/ui/auth-helpers";
+import { required } from "zod/v4-mini";
+import showPass from "../../../imgs/showPass.png";
+import hidePass from "../../../imgs/hidePass.png";
 
 type RegisterFormProps = {
   redirect?: string;
@@ -14,6 +16,7 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -59,7 +62,7 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
   }
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {[
         { key: "firstName", label: "Nombre", type: "text" },
         { key: "lastName", label: "Apellido", type: "text" },
@@ -69,38 +72,58 @@ export function RegisterForm({ redirect, loginHref = "/login" }: RegisterFormPro
         { key: "password", label: "Contraseña", type: "password" },
         { key: "repeatPassword", label: "Confirmar Contraseña", type: "password" },
       ].map((field) => (
-        <div className="flex w-full min-w-0 flex-col" key={field.key}>
-          <label className="text-sm font-sm font-Citigol" htmlFor={`register-${field.key}`}>
+        <div className="flex flex-col gap-2" key={field.key}>
+          <label className="text-sm font-medium text-slate-500" htmlFor={`register-${field.key}`}>
             {field.label}
           </label>
-          <input
-            id={`register-${field.key}`}
-            className={`block w-full min-w-0 max-w-full rounded-md border-2 border-gray-300 bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-teal-600 sm:text-sm/6 font-Citigol ${field.type === "date" ? "appearance-none pr-3" : ""}`}
-            type={field.type}
-            value={form[field.key as keyof typeof form]}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                [field.key]: event.target.value,
-              }))
-            }
-            required 
-          />
+          <div className="relative">
+            <input
+              id={`register-${field.key}`}
+              className="block w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 outline-1 -outline-offset-1 outline-slate-200 placeholder:text-slate-400 focus:outline-2 focus:-outline-offset-2 focus:outline-cyan-700 sm:text-sm/6"
+              type={field.type === "password" ? (showPassword ? "text" : field.type) : field.type}
+              value={form[field.key as keyof typeof form]}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  [field.key]: event.target.value,
+                }))
+              }
+              required
+            />
+            {field.type === "password" && (
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 flex h-3 w-5 -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword((current) => !current)}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                <img
+                  className="h-3 w-5"
+                  src={showPassword ? hidePass.src : showPass.src}
+                  alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                />
+              </button>
+            )}
+          </div>
         </div>
       ))}
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
-      <button className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-Citigol text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" type="submit" disabled={submitting}>
+      <button
+        type="submit"
+        disabled={submitting}
+        className="flex w-full justify-center rounded-2xl bg-cyan-700 px-3 py-2 text-sm/6 font-semibold text-white transition hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700"
+      >
         {submitting ? "Creando cuenta..." : "Crear cuenta"}
       </button>
 
-      <p className="mt-2 text-center text-sm/6 text-400">
-          ¿Ya tienes cuenta?{' '}
-          <a className="font-semibold font-Citigol text-indigo-400 hover:text-indigo-300" href={loginHref}>
-            Inicia sesion
-          </a>
-        </p>
+      <p className="mt-2 text-center text-sm/6 text-slate-900">
+        ¿Ya tienes cuenta?{" "}
+        <a className="font-semibold text-cyan-700 hover:text-cyan-800" href={loginHref}>
+          Inicia sesión
+        </a>
+      </p>
     </form>
   );
 }
