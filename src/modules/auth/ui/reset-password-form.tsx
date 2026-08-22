@@ -61,15 +61,15 @@ export function ResetPasswordForm() {
 
   const missingTokens = !accessToken || !refreshToken;
 
-  return (
+    return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium" htmlFor="reset-password">
+        <label className="text-sm font-medium text-slate-500" htmlFor="reset-password">
           Nueva contraseña
         </label>
         <input
           id="reset-password"
-          className="rounded-xl border border-slate-300 px-4 py-3"
+          className="block w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 outline-1 -outline-offset-1 outline-slate-200 placeholder:text-slate-400 focus:outline-2 focus:-outline-offset-2 focus:outline-cyan-700 sm:text-sm/6"
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -78,11 +78,15 @@ export function ResetPasswordForm() {
         />
       </div>
 
-      {missingTokens ? <p className="text-sm text-red-600">No encontramos los datos del enlace de recuperacion.</p> : null}
+      {missingTokens ? <p className="text-sm text-red-600">No encontramos los datos del enlace de recuperación.</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
 
-      <button type="submit" disabled={submitting || missingTokens} className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+      <button
+        type="submit"
+        disabled={submitting || missingTokens}
+        className="flex w-full justify-center rounded-2xl bg-cyan-700 px-3 py-2 text-sm/6 font-semibold text-white transition hover:bg-cyan-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700"
+      >
         {submitting ? "Actualizando..." : "Guardar nueva contraseña"}
       </button>
     </form>
